@@ -1,0 +1,247 @@
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+*:not(dialog) {
+  margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  /* 4. Increase line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/*
+  10. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+
+
+:root {
+    font-family: sans-serif;
+
+    --btn-width-s: 2rem;
+
+    --separation-s: 1rem;
+    --separation-m: 2rem;
+    --separation-l: 3rem;
+
+    --diameter-m: 5rem;
+
+    --sidebar-min-width: 200px;
+    
+    --main-min-width: 500px;
+    --main-min-height: 200px;
+
+    --clr-grey: rgb(255, 255, 255);
+    --clr-grey-dark: rgb(142, 142, 142);
+    --clr-biege: rgb(205, 196, 157);
+    --clr-biege-dark: rgb(149, 143, 115);
+
+    --box-shadow-mid: 0 0 15px 0px rgb(0, 0, 0); 
+    --box-shadow-light: 0 7px 10px 0px rgba(0, 0, 0, 0.25);
+    --box-shadow-sidebar-items: -5px 5px 1px 0px rgba(0, 0, 0, 0.25);
+    --transition-s: 0.5s;
+
+    --border-biege: 1px solid var(--clr-biege-dark);
+    --border-biege-light: 1px solid rgb(186, 177, 177);
+    --border-radius-s: 1rem;
+    --border-radius-m: 2rem;
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template: 1fr 80% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 5fr);
+    
+}
+
+aside{
+  grid-area: 1/1/-1/2;
+  /* background-color: var(--clr-biege); */
+  background-image: url("./img/marble2.webp");
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset -1px 0 8px 0 rgba(0, 0, 0, 0.285);
+}
+
+#profile-bar {
+  display: flex;
+  padding: calc(var(--separation-s) / 2) var(--separation-s);
+}
+
+#profile-bar>* {
+  flex: none;
+}
+
+#pfp {
+  width: var(--btn-width-s);
+  border-radius: 50%;
+  margin-right: auto;
+}
+
+#profile-bar button {
+  width: var(--btn-width-s);
+  height: var(--btn-width-s);
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+
+  transition: var(--transition-s);
+}
+
+#profile-bar button:hover {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#profile-bar button>img {
+  width: 100%;
+}
+
+aside section {
+  font-size: small;
+  margin: var(--separation-l) var(--separation-s);
+}
+
+aside h2 {
+  border-bottom: var(--border-biege);
+  margin-bottom: var(--separation-s);
+}
+
+aside ul {
+  border-radius: var(--border-radius-s);
+  /* border-left: var(--border-biege);
+  border-bottom: var(--border-biege); */
+  list-style-type: none;
+  padding: var(--separation-s);
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--separation-s) / 2);
+
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  
+
+  box-shadow: var(--box-shadow-sidebar-items);
+}
+
+aside ul li{
+  /* padding-bottom: calc(var(--separation-s) / 2); */
+  border-bottom:var(--border-biege-light);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+}
+
+aside ul li:hover{
+  background-color: rgba(0, 0, 0, 0.165);
+}
+
+header{
+    grid-area: 1/2/2/-1;
+    background-color: var(--clr-grey);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: var(--separation-l);
+    padding-bottom: 0;
+}
+
+header hr{
+  border-top: 1px solid var(--clr-grey-dark);
+  border-bottom: none;
+  width: 100%;
+  box-shadow: var(--box-shadow-mid);
+  z-index: 1;
+}
+header h1{
+  z-index: 2;
+  background-color: white;
+  margin: 0 calc(var(--separation-l) * -1);
+  padding: var(--separation-s) var(--separation-l);
+}
+
+main {
+    grid-area: 2/2/-1/-1;
+    background-color: var(--clr-grey);
+    position: relative;
+}
+
+main button{
+  font-size: calc(var(--diameter-m) * 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 20%;
+  background-color: var(--clr-biege);
+  width: var(--diameter-m);
+  height: var(--diameter-m);
+  border: none;
+  position: fixed;
+  z-index: 10;
+  bottom: var(--separation-l);
+  right: var(--separation-l);
+
+
+  box-shadow: var(--box-shadow-light);
+  transition: var(--transition-s);
+}
+
+main button:hover{
+  background-color: var(--clr-biege-dark);
+}
+
+main > div {
+  padding: var(--separation-l);
+  padding-top: var(--separation-s);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+}
+
