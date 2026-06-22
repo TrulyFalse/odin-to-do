@@ -58,10 +58,14 @@ h1, h2, h3, h4, h5, h6 {
 :root {
     font-family: sans-serif;
 
-    --marble-img-path: url("./img/marble2.webp");
+    --marble-img-path-horizontal: url("./img/marble.avif");
+    --marble-img-path: url("./img/btn-back.webp");
 
     --btn-width-s: 2rem;
+    --icon-width-s: 1rem;
+    --icon-width-m: 2.5rem;
 
+    --separation-xs: 0.5rem;
     --separation-s: 1rem;
     --separation-m: 2rem;
     --separation-l: 3rem;
@@ -77,14 +81,17 @@ h1, h2, h3, h4, h5, h6 {
     --clr-grey-dark: rgb(142, 142, 142);
     --clr-biege: rgb(205, 196, 157);
     --clr-biege-dark: rgb(149, 143, 115);
+    --clr-light-gold: rgb(255, 243, 200);
 
     --box-shadow-mid: 0 0 15px 0px rgb(0, 0, 0); 
     --box-shadow-light: 0 7px 10px 0px rgba(0, 0, 0, 0.25);
-    --box-shadow-sidebar-items: -5px 5px 1px 0px rgba(0, 0, 0, 0.25);
+    --box-shadow-sidebar-items: -5px 5px 1px 0px rgba(0, 0, 0, 0.344);
     --transition-s: 0.5s;
+    --transition-m: 1s;
 
     --border-biege: 1px solid var(--clr-biege-dark);
     --border-biege-light: 1px solid rgb(186, 177, 177);
+    --border-radius-xs: 0.5rem;
     --border-radius-s: 1rem;
     --border-radius-m: 2rem;
 }
@@ -93,26 +100,26 @@ body {
     min-width: 100vw;
     min-height: 100vh;
     display: grid;
-    grid-template: 1fr 80% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 5fr);
+    grid-template: 1fr 80% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 1fr);
     
 }
 
 aside{
   grid-area: 1/1/-1/2;
-  /* background-color: var(--clr-biege); */
+  
   background-image: var(--marble-img-path);
   background-position: center;
   background-size: cover;
-  box-shadow: inset -1px 0 8px 0 rgba(0, 0, 0, 0.285);
+  box-shadow: inset -1px 0 8px 0 rgb(0, 0, 0);
 
   display: grid;
-  grid-template-rows: subgrid;
+  grid-template: subgrid / subgrid;
 }
 
 #profile-bar {
   grid-area: 1/1/2/2;
   display: flex;
-  padding: calc(var(--separation-s) / 2) var(--separation-s);
+  
   align-items: flex-start;
 }
 
@@ -120,11 +127,26 @@ aside{
   flex: none;
 }
 
+#profile-bar > div {
+  border-radius: 0 0 0 var(--border-radius-s);
+  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.69);
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+
+  box-shadow: var(--box-shadow-light);
+}
+
 #pfp {
-  width: var(--btn-width-s);
-  border-radius: 50%;
+  width: 40%;
+  border-radius: 0 0 100% 0;
   margin-right: auto;
-  border: 3px solid white;
+  
+  border-bottom: var(--separation-s) solid rgba(255, 255, 255, 0.5);
+  border-right: var(--separation-s) solid white;
+  box-shadow: var(--box-shadow-light);
 }
 
 #profile-bar button {
@@ -132,9 +154,9 @@ aside{
   height: var(--btn-width-s);
   border: none;
   background-color: transparent;
-  border-radius: 50%;
+  
 
-  transition: var(--transition-s);
+  transition: background-color var(--transition-s);
 }
 
 #profile-bar button:hover {
@@ -147,21 +169,33 @@ aside{
 
 #project-list{
   margin-top: calc(var(--separation-m) * -1);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--separation-m);
+  padding: 0 var(--separation-s);
 }
 
 aside section {
   font-size: small;
-  margin: 0 var(--separation-s) var(--separation-l) var(--separation-s);
+  
 }
 
 aside h2 {
+  color: var(--clr-light-gold);
   height: var(--separation-m);
   border-bottom: var(--border-biege);
-  margin-bottom: var(--separation-s);
+  
+  background-color: rgba(0, 0, 0, 0.379);
+  backdrop-filter: blur(5px);
+  border-radius:  var(--border-radius-s) var(--border-radius-s) 0 0;
+  
+  padding-left: var(--separation-s);
 }
 
 aside ul {
-  border-radius: var(--border-radius-s);
+  border-radius: 0 0 var(--border-radius-s) var(--border-radius-s);
   /* border-left: var(--border-biege);
   border-bottom: var(--border-biege); */
   list-style-type: none;
@@ -186,6 +220,15 @@ aside ul li{
   overflow: hidden;
   border-radius: calc(var(--border-radius-s) / 2.5);
   padding: 0 var(--separation-s);
+  display: flex;
+  align-items: center;
+  gap: var(--separation-s);
+}
+
+aside ul li img{
+  display: inline;
+  width: var(--icon-width-s);
+  height: var(--icon-width-s);
 }
 
 aside ul li:hover{
@@ -201,6 +244,12 @@ header{
     align-items: stretch;
     padding: var(--separation-l);
     padding-bottom: 0;
+
+    z-index: 1; /* to get over profile-bar button's box-shadow */
+}
+header img{
+  width: var(--icon-width-m);
+  display: inline;
 }
 
 header hr{
@@ -215,6 +264,11 @@ header h1{
   background-color: white;
   margin: 0 calc(var(--separation-l) * -1);
   padding: var(--separation-s) var(--separation-l);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--separation-s);
 }
 
 main {
@@ -223,8 +277,8 @@ main {
     position: relative;
 }
 
-main button{
-  --bg-opacity: 0.5;
+#main-create-todo-btn{
+  --bg-opacity: 0;
   font-size: calc(var(--diameter-m) * 0.75);
   display: flex;
   justify-content: center;
@@ -247,18 +301,18 @@ main button{
 
 
   box-shadow: var(--box-shadow-light);
-  transition: var(--transition-s);
+  transition: background-size var(--transition-s);
 }
 
-main button:hover{
-  --bg-opacity: 0.25;
+#main-create-todo-btn:hover{
+  --bg-opacity: 0;
   background-size: 300%;
-  background-color: var(--clr-biege-dark);
 }
-main button p {
-  transition: var(--transition-s);
+#main-create-todo-btn p {
+  color: var(--clr-light-gold);
+  transition: transform var(--transition-s);
 }
-main button:hover p{
+#main-create-todo-btn:hover p{
   transform: scale(0.75)
 }
 
@@ -271,5 +325,70 @@ main > div {
   bottom: 0;
   right: 0;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--separation-m);
 }
 
+.todo-card {
+  padding: var(--separation-m);
+  
+  border-radius: var(--border-radius-m);
+  
+  background-image: linear-gradient(to top, rgba(255, 255, 255, 0.442)), var(--marble-img-path-horizontal);
+    background-position: center;
+    background-size: cover;
+    box-shadow: var(--box-shadow-light);
+}
+
+.todo-card textarea{
+  color: var(--clr-grey-dark);
+  width: 500px;
+  max-height: 150px;
+  field-sizing: content;
+  resize: none;
+  border: none;
+  background-color: transparent;
+}
+
+.todo-card .todo-status{
+  display: flex;
+  width: 100%;
+  align-items: center; 
+}
+
+
+
+.todo-card .is-done-btn {
+  flex: none;
+  margin-right: 20px;
+  margin-left: auto;
+  width: var(--btn-width-s);
+  height: var(--btn-width-s);
+  background-color: rgba(0, 0, 0, 0.093);
+  box-shadow: inset var(--box-shadow-light);
+  border-radius: var(--border-radius-xs);
+
+  overflow: visible;
+  transition: background-color var(--transition-m);
+}
+
+.is-done-btn:hover{
+  background-color: rgb(128, 189, 253);
+}
+
+.is-done-btn div {
+  margin: -11px 0 0 -5px;
+  width: 0;
+  transition: width var(--transition-m);
+  overflow: hidden;
+}
+
+.is-done-btn:hover div {
+  width: var(--icon-width-m);
+}
+
+.is-done-btn img {
+  min-width: var(--icon-width-m);
+}

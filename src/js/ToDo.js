@@ -31,6 +31,25 @@ export class ToDo{
     }
 
     isExpired(){return Date.now() > this.dueDate;}
+    get timeLeft() {
+        const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
+        let timeLeftInMilliseconds = this.dueDate - Date.now();
+        let daysLeft = timeLeftInMilliseconds / MILLISECONDS_IN_A_DAY;
+        let hoursLeft = (daysLeft % 1) * 24;
+        let minsLeft = (hoursLeft % 1) * 60;
+
+        // we now have no use for the decimal portions
+        let timeLeft = {
+            days : Math.floor(daysLeft),
+            hours : Math.floor(hoursLeft),
+            mins : Math.floor(minsLeft),
+        }
+        
+        return timeLeft;
+
+        // in view write a string as such: `${timeLeft.days ? timeLeft.days + " day " : ""} ${timeLeft.hours ? timeLeft.hours + " hour " : ""} ${timeLeft.mins} min`
+    }
     
     get progress(){
         if(this.checklist.length == 0)
