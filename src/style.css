@@ -365,8 +365,14 @@ main > div {
   box-shadow: inset var(--box-shadow-light);
 }
 
-.todo-status progress:active+.subtasks{
+.todo-status .progress:active + .subtasks{
   height: auto;
+  padding: var(--separation-s);
+}
+
+.subtasks li{
+  list-style-position: inside;
+  border-bottom: var(--border-biege-light);
 }
 
 
