@@ -356,16 +356,21 @@ main > div {
   display: flex;
   width: 100%;
   align-items: center; 
+  position: relative;
 }
 
 .todo-status .subtasks {
   overflow: hidden;
   height: 0;
   border-radius: var(--border-radius-s);
-  box-shadow: inset var(--box-shadow-light);
+  box-shadow: var(--box-shadow-light);
+  background-color: rgb(234, 234, 234);
+  transition: height var(--transition-s);
+  position: absolute;
+  width: 50%;
 }
 
-.todo-status .progress:active + .subtasks{
+.todo-status .progress:hover .subtasks{
   height: auto;
   padding: var(--separation-s);
 }
