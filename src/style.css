@@ -101,7 +101,7 @@ body {
     min-width: 100vw;
     min-height: 100vh;
     display: grid;
-    grid-template: 1fr 80% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 1fr);
+    grid-template: 1fr 85% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 1fr);
     
 }
 
@@ -354,11 +354,17 @@ main > div {
   height: var(--btn-width-m);
   border: none;
   background-color: transparent;
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.329), transparent 40%);
   border-radius: var(--border-radius-s);
-  transition: background-color var(--transition-s);
+  background-size: 100% 200%;
+  background-position: top;
+  transition: background-position var(--transition-s);
 }
 .header button:hover {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-position: bottom;
+}
+.header button:active {
+  background-color: rgba(159, 159, 159, 0.515);
 }
 
 .todo-card textarea{
@@ -417,13 +423,19 @@ main > div {
 .subtasks li{
   list-style-position: inside;
   border-bottom: var(--border-biege-light);
-  display: flex;
+}
+
+.subtasks li > div {
+  width: 80%;
+  display: inline-flex;
   justify-content: space-between;
 }
 
 
-
 .todo-card .is-done-btn {
+
+  --tick-size: 3.5rem;
+
   flex: none;
   margin-right: 20px;
   margin-left: auto;
@@ -442,16 +454,17 @@ main > div {
 }
 
 .is-done-btn div {
-  margin: -11px 0 0 -5px;
+  margin: -21px 0 0 -10px;
   width: 0;
   transition: width var(--transition-m);
   overflow: hidden;
 }
 
 .is-done-btn:hover div {
-  width: var(--icon-width-m);
+  width: var(--tick-size);
 }
 
 .is-done-btn img {
-  min-width: var(--icon-width-m);
+  min-width: var(--tick-size);
+  min-height: var(--tick-size);
 }
