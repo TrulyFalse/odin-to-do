@@ -62,6 +62,7 @@ h1, h2, h3, h4, h5, h6 {
     --marble-img-path: url("./img/btn-back.webp");
 
     --btn-width-s: 2rem;
+    --btn-width-m: 3rem;
     --icon-width-s: 1rem;
     --icon-width-m: 2.5rem;
 
@@ -74,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
 
     --sidebar-min-width: 200px;
     
-    --main-min-width: 500px;
+    --main-min-width: 700px;
     --main-min-height: 200px;
 
     --clr-grey: rgb(255, 255, 255);
@@ -342,9 +343,27 @@ main > div {
     box-shadow: var(--box-shadow-light);
 }
 
+.todo-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.header button {
+  padding: var(--separation-xs);
+  width: var(--btn-width-m);
+  height: var(--btn-width-m);
+  border: none;
+  background-color: transparent;
+  border-radius: var(--border-radius-s);
+  transition: background-color var(--transition-s);
+}
+.header button:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
 .todo-card textarea{
   color: var(--clr-grey-dark);
-  width: 500px;
+  width: 100%;
   max-height: 150px;
   field-sizing: content;
   resize: none;
@@ -356,18 +375,38 @@ main > div {
   display: flex;
   width: 100%;
   align-items: center; 
+}
+
+.todo-status > div > * {
+  padding: 0 var(--separation-xs);
+}
+
+.todo-status .progress {
+  border-radius: var(--border-radius-s) var(--border-radius-s) 0 0;
   position: relative;
+  transition: background-color var(--transition-s);
+}
+
+.todo-status .progress:hover {
+  background-color: rgba(137, 137, 137, 0.366);
 }
 
 .todo-status .subtasks {
   overflow: hidden;
-  height: 0;
-  border-radius: var(--border-radius-s);
+  border-radius: 0 0 var(--border-radius-s) var(--border-radius-s);
   box-shadow: var(--box-shadow-light);
-  background-color: rgb(234, 234, 234);
-  transition: height var(--transition-s);
+  background-color: rgb(244, 244, 244);
+  transition: height var(--transition-s), padding var(--transition-s);
   position: absolute;
-  width: 50%;
+  left: 0;
+  right: 0;
+
+  max-height: 150px;
+  overflow: auto;
+
+  box-sizing: border-box;
+  height: 0;
+  padding: 0 var(--separation-s);
 }
 
 .todo-status .progress:hover .subtasks{
@@ -378,6 +417,8 @@ main > div {
 .subtasks li{
   list-style-position: inside;
   border-bottom: var(--border-biege-light);
+  display: flex;
+  justify-content: space-between;
 }
 
 
