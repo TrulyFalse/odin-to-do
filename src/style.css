@@ -317,6 +317,49 @@ main {
   transform: scale(0.75)
 }
 
+#todo-form {
+  --todo-form-width: 500px;
+  --todo-form-height: 325px;
+
+  width: var(--diameter-m);
+  height: var(--diameter-m);
+
+  bottom: var(--separation-l);
+  right: var(--separation-l);
+  overflow: hidden;
+  position: fixed;
+  z-index: 3;
+  background-color: white;
+  padding: var(--separation-m);
+  padding-bottom: var(--separation-s);
+  border-radius: var(--border-radius-s);
+  border: var(--border-biege);
+  box-shadow: var(--box-shadow-light);
+
+  transition: width var(--transition-m), height var(--transition-m);
+}
+#main-create-todo-btn:hover + #todo-form{
+  width: var(--todo-form-width);
+  height: var(--todo-form-height);
+}
+#todo-form .fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--separation-s);
+}
+#todo-form input, #todo-form textarea, #todo-form button{
+  border-radius: var(--border-radius-xs);
+  border: var(--border-biege-light);
+}
+#todo-form button{
+  display: block;
+  margin: 0 auto;
+  margin-top: var(--separation-s);
+}
+
+
+
+
 main > div {
   padding: calc(var(--separation-l) * 2);
   padding-top: var(--separation-s);
@@ -388,12 +431,14 @@ main > div {
 }
 
 .todo-status .progress {
-  border-radius: var(--border-radius-s) var(--border-radius-s) 0 0;
+  border: var(--border-biege-light);
+  border-radius: var(--border-radius-s);
   position: relative;
-  transition: background-color var(--transition-s);
+  transition: background-color var(--transition-s), border-radius var(--transition-s);
 }
 
 .todo-status .progress:hover {
+  border-radius: var(--border-radius-s) var(--border-radius-s) 0 0;
   background-color: rgba(137, 137, 137, 0.366);
 }
 
