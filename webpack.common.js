@@ -22,7 +22,7 @@ export default {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(jpg|jpeg|png|webp|gif)$/i,
+                test: /\.(jpg|jpeg|png|webp|gif|svg)$/i,
                 type: 'asset/resource',
             },
             {
