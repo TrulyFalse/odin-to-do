@@ -86,11 +86,13 @@ h1, h2, h3, h4, h5, h6 {
 
     --box-shadow-mid: 0 0 15px 0px rgb(0, 0, 0); 
     --box-shadow-light: 0 7px 10px 0px rgba(0, 0, 0, 0.25);
+    --box-shadow-xlight: 0 7px 10px 0px rgba(0, 0, 0, 0.08);
     --box-shadow-sidebar-items: -5px 5px 1px 0px rgba(0, 0, 0, 0.344);
     --transition-s: 0.5s;
     --transition-m: 1s;
 
     --border-biege: 1px solid var(--clr-biege-dark);
+    --border-grey: 1px solid grey;
     --border-biege-light: 1px solid rgb(186, 177, 177);
     --border-radius-xs: 0.5rem;
     --border-radius-s: 1rem;
@@ -232,6 +234,10 @@ aside ul li img{
   height: var(--icon-width-s);
 }
 
+aside ul li img.center{
+  margin: 0 auto;
+}
+
 aside ul li:hover{
   background-color: rgba(0, 0, 0, 0.165);
 }
@@ -279,7 +285,7 @@ main {
 }
 
 #main-create-todo-btn{
-  --bg-opacity: 0;
+  --bg-opacity: 0.2;
   font-size: calc(var(--diameter-m) * 0.75);
   display: flex;
   justify-content: center;
@@ -287,7 +293,7 @@ main {
 
   border-radius: 20%;
   
-  background-image: linear-gradient(to top, rgba(255, 255, 255, var(--bg-opacity))), var(--marble-img-path);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, var(--bg-opacity))), var(--marble-img-path);
   background-position: center, center;
   background-size: 100%;
 
@@ -306,7 +312,7 @@ main {
 }
 
 #main-create-todo-btn:hover{
-  --bg-opacity: 0;
+  /* --bg-opacity: 0; */
   background-size: 300%;
 }
 #main-create-todo-btn p {
@@ -338,22 +344,71 @@ main {
 
   transition: width var(--transition-m), height var(--transition-m);
 }
-#main-create-todo-btn:hover + #todo-form{
+#main-create-todo-btn:focus + #todo-form{
   width: var(--todo-form-width);
-  height: var(--todo-form-height);
+  /* height: var(--todo-form-height); */
+  height: auto;
 }
+
+#todo-form .scroll-container{
+  padding: var(--separation-xs) 0;
+  max-height: 500px;
+  overflow: auto;
+  border-top: var(--border-grey);
+  border-bottom: var(--border-grey);
+}
+
 #todo-form .fields {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: var(--separation-s);
+  gap: var(--separation-xs);
 }
+#todo-form .fields + hr{
+  margin: var(--separation-xs) 0;
+}
+
 #todo-form input, #todo-form textarea, #todo-form button{
   border-radius: var(--border-radius-xs);
   border: var(--border-biege-light);
+  height: var(--separation-m);
+}
+#todo-form input, #todo-form textarea{
+  box-shadow: inset var(--box-shadow-xlight);
+  background-color: rgb(246, 246, 246);
+  padding: var(--separation-xs) var(--separation-s);
+}
+#todo-form textarea {
+  height: calc(3.5 * var(--separation-m));
 }
 #todo-form button{
+  background-color: white;
+}
+#checklist ol {
+  --del-btn-width: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--separation-xs);
+  align-items: stretch;
+}
+#checklist ol input{
+  width: 100%;
+  padding-right: var(--del-btn-width);
+}
+#checklist ol li input+button {
+  margin-left: calc( -1 * var(--del-btn-width));
+  width: var(--del-btn-width);
+}
+#checklist ol li:last-of-type{
+  list-style-type: none;
+}
+#checklist ol li:last-of-type button{
+  width: 100%;
+}
+
+#todo-form > button{
   display: block;
-  margin: 0 auto;
+  
   margin-top: var(--separation-s);
 }
 
@@ -494,7 +549,7 @@ main > div {
   transition: background-color var(--transition-m);
 }
 
-.is-done-btn:hover{
+.is-done-btn:focus{
   background-color: rgb(128, 189, 253);
 }
 
@@ -505,7 +560,7 @@ main > div {
   overflow: hidden;
 }
 
-.is-done-btn:hover div {
+.is-done-btn:focus div {
   width: var(--tick-size);
 }
 
