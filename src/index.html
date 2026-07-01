@@ -26,7 +26,7 @@
             <section>
                 <h2>Menu</h2>
                 <ul>
-                    <li><img src="./img/add-icon.png" alt="add-icon">Add Task</li>
+                    <li><img src="./img/add-icon.png" alt="add-icon">Add To-Do</li>
                     <li><img src="./img/project-icon.png" alt="project-icon">Add Project</li>
                     <li><img src="./img/search-icon.png" alt="search-icon">Search</li>
                     <li><img src="./img/clock-icon.png" alt="clock-icon">Today</li>
@@ -67,13 +67,19 @@
                     <label for="description">Description</label><textarea id="description" name="description" row="50" col="20"></textarea>
                     <label for="due-date">Due date</label><input type="datetime-local" min="2026-06-28T18:53" id="due-date" name="due-date">
                     <label for="priority">Priority</label><input type="number" min="1" max="10" id="priority" name="priority">
+                    <label for="project">Project</label>
+                    <select id="project" name="project">
+                        <option value="" selected>Choose a project</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Workout">Workout</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Hangouts">Hangouts</option>
+                    </select>
                 </div>
                 <hr>
                 <label for="checklist">Checklist</label>
                 <div id="checklist">
                     <ol>
-                        <li><input type="text"><button type="button">-</button></li>
-                        <li><input type="text"><button type="button">-</button></li>
                         <li><input type="text"><button type="button">-</button></li>
                         <li><input type="text"><button type="button">-</button></li>
                         <li><input type="text"><button type="button">-</button></li>

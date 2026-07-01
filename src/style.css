@@ -295,7 +295,7 @@ main {
   
   background-image: linear-gradient(to top, rgba(0, 0, 0, var(--bg-opacity))), var(--marble-img-path);
   background-position: center, center;
-  background-size: 100%;
+  background-size: 200%;
 
 
   width: var(--diameter-m);
@@ -311,9 +311,12 @@ main {
   transition: background-size var(--transition-s);
 }
 
-#main-create-todo-btn:hover{
+#main-create-todo-btn:hover {
+  background-size: 100%;
+}
+#main-create-todo-btn.open{
   /* --bg-opacity: 0; */
-  background-size: 300%;
+  background-size: 400%;
 }
 #main-create-todo-btn p {
   color: var(--clr-light-gold);
@@ -321,6 +324,9 @@ main {
 }
 #main-create-todo-btn:hover p{
   transform: scale(0.75)
+}
+#main-create-todo-btn.open p{
+  transform: rotate(45deg);
 }
 
 #todo-form {
@@ -344,7 +350,7 @@ main {
 
   transition: width var(--transition-m), height var(--transition-m);
 }
-#main-create-todo-btn:focus + #todo-form{
+#main-create-todo-btn.open + #todo-form{
   width: var(--todo-form-width);
   /* height: var(--todo-form-height); */
   height: auto;
@@ -367,15 +373,15 @@ main {
   margin: var(--separation-xs) 0;
 }
 
-#todo-form input, #todo-form textarea, #todo-form button{
+#todo-form input, #todo-form textarea, #todo-form button, #todo-form select{
   border-radius: var(--border-radius-xs);
   border: var(--border-biege-light);
   height: var(--separation-m);
 }
-#todo-form input, #todo-form textarea{
+#todo-form input, #todo-form textarea, #todo-form select{
   box-shadow: inset var(--box-shadow-xlight);
   background-color: rgb(246, 246, 246);
-  padding: var(--separation-xs) var(--separation-s);
+  padding: 0 var(--separation-s);
 }
 #todo-form textarea {
   height: calc(3.5 * var(--separation-m));
