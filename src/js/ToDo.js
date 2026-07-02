@@ -21,7 +21,7 @@ export class ToDo{
         this.title = title;
         this.description = description;
         this.dueDate = (dueDate instanceof Date) ? dueDate : new Date(dueDate);
-        this.priority = priority;
+        this.#priority = +priority;
 
         if(checklist)
             for(let item of checklist)

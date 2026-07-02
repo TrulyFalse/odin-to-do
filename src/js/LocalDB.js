@@ -5,7 +5,7 @@ let projects = [];
 
 function initialize(){
     if(!localStorage[LOCAL_STORAGE_KEY]){
-        let generalProject = new Project("General");
+        let generalProject = new Project({name: "General", toDoList: []});
         projects.push(generalProject);
     } else this.deserialize();
 }
@@ -30,4 +30,4 @@ function deserialize(){
         projects.push(new Project(rawProject));
 }
 
-export default { initialize, getProject, addProject, removeProject, serialize, deserialize};
+export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize};

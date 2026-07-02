@@ -1,5 +1,6 @@
-import DB from "./LocalDB.js";
+import LocalDB from "./LocalDB.js";
 import Project from "./Project.js";
+import {ToDo} from "./ToDo.js";
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
@@ -25,9 +26,9 @@ function initializePage(){
         if(!document.forms['todo-form'].reportValidity()) return;
 
         // turn nodelist to array, map all textContent to array value, filter off empty values
-        let subtasks = 
+        let checklist = 
         [...todoForm.querySelectorAll('#checklist input')]
-        .map((value) => value.textContent)
+        .map((value) => value.value)
         .filter((value) => value);
 
         let form = new FormData(todoForm);
@@ -37,9 +38,11 @@ function initializePage(){
             dueDate: form.get("due-date"),
             priority: form.get("priority"),
             project: form.get("project"),
-            subtasks,
+            checklist,
         }
-        DB.getProject(newTodo.project).addToDo(newTodo);
+        console.log(newTodo);
+        LocalDB.getProject(newTodo.project).addToDo(new ToDo(newTodo));
+        console.log(LocalDB.projects);
     });
 
 
