@@ -10,8 +10,13 @@ function initialize(){
     } else this.deserialize();
 }
 
-function getProjects(){return projects.slice();}
-function addProject(project){projects.push(project);}
+function getProject(name){return projects.find((project) => project.name === name);}
+function addProject(project){
+    if(!getProject(project.name))
+        projects.push(project);
+    else
+        throw new Error("Project names must be unique!");
+}
 function removeProject(index) {
     if(projects[index].name === "General")
         throw new Error("'General' project is not deletable as it constitutes the primary folder for storing To-Dos.");
@@ -25,4 +30,4 @@ function deserialize(){
         projects.push(new Project(rawProject));
 }
 
-export default { initialize, getProjects, addProject, removeProject, serialize, deserialize};
+export default { initialize, getProject, addProject, removeProject, serialize, deserialize};

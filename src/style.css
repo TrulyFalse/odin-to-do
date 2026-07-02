@@ -286,6 +286,7 @@ main {
 
 #main-create-todo-btn{
   --bg-opacity: 0.2;
+  color: var(--clr-light-gold);
   font-size: calc(var(--diameter-m) * 0.75);
   display: flex;
   justify-content: center;
@@ -295,7 +296,7 @@ main {
   
   background-image: linear-gradient(to top, rgba(0, 0, 0, var(--bg-opacity))), var(--marble-img-path);
   background-position: center, center;
-  background-size: 200%;
+  background-size: 100%;
 
 
   width: var(--diameter-m);
@@ -308,25 +309,26 @@ main {
 
 
   box-shadow: var(--box-shadow-light);
-  transition: background-size var(--transition-s);
+  transition: background-size var(--transition-s), color var(--transition-s);
 }
 
 #main-create-todo-btn:hover {
-  background-size: 100%;
+  cursor: pointer;
+  background-size: 300%;
 }
 #main-create-todo-btn.open{
-  /* --bg-opacity: 0; */
-  background-size: 400%;
+  --bg-opacity: 0.4;
+  background-size: 500%;
+  color: rgb(255, 172, 83);
 }
 #main-create-todo-btn p {
-  color: var(--clr-light-gold);
   transition: transform var(--transition-s);
 }
 #main-create-todo-btn:hover p{
   transform: scale(0.75)
 }
 #main-create-todo-btn.open p{
-  transform: rotate(45deg);
+  transform: rotate(135deg);
 }
 
 #todo-form {
@@ -412,10 +414,34 @@ main {
   width: 100%;
 }
 
-#todo-form > button{
-  display: block;
-  
+#todo-form .form-buttons{
+  display: flex;
+  gap: var(--separation-xs);
   margin-top: var(--separation-s);
+}
+.form-buttons button{
+  width: var(--diameter-m);
+}
+.form-buttons .create-todo-btn-gap {
+  position: relative;
+  margin-left: auto;
+  margin-right: calc(-1 * var(--separation-m));
+  margin-bottom: calc(-1 * var(--separation-s));
+}
+.form-buttons .create-todo-btn-gap div {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  border-top: var(--border-biege);
+  width: calc(1.1 * var(--diameter-m));
+  height: calc(1.1 * var(--diameter-m));
+  border-radius: var(--border-radius-s) var(--border-radius-xs) 0 0;
+}
+#todo-form button:hover {
+  cursor: pointer;
+  background-color: rgb(255, 234, 196);
 }
 
 
