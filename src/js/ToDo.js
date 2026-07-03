@@ -9,7 +9,9 @@ export class Subtask{
 }
 
 export class ToDo{
+    static idCounter = 0;
     static MIN_PRIORITY_BOUND = 10;
+    #id;
     title;
     description;
     dueDate;
@@ -18,6 +20,7 @@ export class ToDo{
     #isDone;
 
     constructor( {title, description, dueDate, priority, isDone = false, checklist} ){
+        this.#id = ToDo.idCounter++;
         this.title = title;
         this.description = description;
         this.dueDate = (dueDate instanceof Date) ? dueDate : new Date(dueDate);
@@ -29,6 +32,8 @@ export class ToDo{
 
         this.#isDone = isDone;
     }
+
+    get id(){return this.#id;}
 
     isExpired(){return Date.now() > this.dueDate;}
     get timeLeft() {
@@ -55,8 +60,7 @@ export class ToDo{
         if(this.checklist.length == 0)
             return 'N/A';
         let numChecked = this.checklist.reduce((count, current) => { if (current.isDone) return count++; }, 0);
-        let percentageDone = (numChecked / this.checklist.length) * 100;
-        return percentageDone;
+        return {numChecked, totalSubtasks: this.checklist.length};
     }
 
     get priority(){return this.#priority;}
@@ -76,7 +80,7 @@ export class ToDo{
     
     get isDone(){return this.#isDone;}
     set isDone(givenIsDone){
-        if(this.progress !== 'N/A' && this.progress !== 100)
+        if(this.progress !== 'N/A' && this.progress.numChecked < this.progress.totalSubtasks)
             throw new Error("Cannot set task as done while checklist remains incompleted.");
         this.#isDone = givenIsDone;
     }

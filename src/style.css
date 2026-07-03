@@ -364,6 +364,7 @@ main {
   overflow: auto;
   border-top: var(--border-grey);
   border-bottom: var(--border-grey);
+  transition: 1s;
 }
 
 #todo-form .fields {
@@ -581,7 +582,7 @@ main > div {
   transition: background-color var(--transition-m);
 }
 
-.is-done-btn:focus{
+.is-done-btn.done{
   background-color: rgb(128, 189, 253);
 }
 
@@ -592,7 +593,7 @@ main > div {
   overflow: hidden;
 }
 
-.is-done-btn:focus div {
+.is-done-btn.done div {
   width: var(--tick-size);
 }
 
