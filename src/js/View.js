@@ -24,6 +24,13 @@ function initializePage(){
         document.addEventListener('click', closeOnExternalClick);
     });
 
+    const existingRemoveSubtaskBtns = document.querySelectorAll("#checklist li button:not([id='add-subtask-btn'])");
+    for(let btn of [...existingRemoveSubtaskBtns]){
+        btn.addEventListener('click', () => {
+                btn.parentElement.remove();
+        })
+    }
+
     createTodoBtn.addEventListener("click", (e) => {
         e.preventDefault();
         if(!document.forms['todo-form'].reportValidity()) return;
@@ -59,7 +66,6 @@ function initializePage(){
             btn.type = 'button';
             btn.textContent = '-';
             btn.addEventListener('click', () => {
-                btn.remove();
                 li.remove();
             })
             li.append(btn);
@@ -69,8 +75,26 @@ function initializePage(){
         scrollContainer.scrollTo({
             top: scrollContainer.scrollHeight,
             behavior: 'smooth',
-            
         });
+    });
+
+
+    const priorityRangeInput = document.querySelector('#todo-form .priority-box input[type="range"]');
+    const priorityNumberInput = document.querySelector('#todo-form .priority-box input[type="number"]');
+    
+    priorityRangeInput.addEventListener('input', (e)=>{
+        priorityNumberInput.value = e.target.value;
+    })
+
+    priorityNumberInput.addEventListener('input', (e)=>{
+        if(e.target.value !== ""){
+            if(e.target.value < 1) e.target.value = 1;
+            else if(e.target.value > 10) e.target.value = 10;
+            priorityRangeInput.value = e.target.value;
+        } else priorityRangeInput.value = 1;
+    })
+    priorityNumberInput.addEventListener('blur', (e) => {
+        if(e.target.value === "") e.target.value = 1;
     })
 
 }

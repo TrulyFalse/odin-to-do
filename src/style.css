@@ -381,11 +381,24 @@ main {
   border: var(--border-biege-light);
   height: var(--separation-m);
 }
-#todo-form input, #todo-form textarea, #todo-form select{
+#todo-form input:not([type="range"]), #todo-form textarea, #todo-form select{
   box-shadow: inset var(--box-shadow-xlight);
   background-color: rgb(246, 246, 246);
   padding: 0 var(--separation-s);
 }
+#todo-form .priority-box {
+  display: flex;
+  gap: var(--separation-s);
+  align-items: center;
+}
+#todo-form .priority-box input[type="range"] {
+  flex: auto;
+}
+#todo-form .priority-box input[type="number"] {
+  max-width: var(--btn-width-m);
+  padding: 0 0 0 var(--separation-xs);
+}
+
 #todo-form textarea {
   height: calc(3.5 * var(--separation-m));
 }

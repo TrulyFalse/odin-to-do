@@ -66,7 +66,23 @@
                     <label for="title">Title</label><input type="text" id="title" name="title" required>
                     <label for="description">Description</label><textarea id="description" name="description" row="50" col="20"></textarea>
                     <label for="due-date">Due date</label><input type="datetime-local" min="2026-06-28T18:53" id="due-date" name="due-date">
-                    <label for="priority">Priority</label><input type="number" min="1" max="10" id="priority" name="priority">
+                    <label for="priority">Priority</label>
+                    <div class="priority-box">
+                        <input type="range" min="1" max="10" id="priority" name="priority" list="priority-markers" value="3">
+                        <input type="number" min="1" max="10" id="priority-direct-input" name="priority-direct-input" value="3">
+                    </div>
+                    <datalist id="priority-markers">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                        <option value="6"></option>
+                        <option value="7"></option>
+                        <option value="8"></option>
+                        <option value="9"></option>
+                        <option value="10"></option>
+                    </datalist>
                     <label for="project">Project</label>
                     <select id="project" name="project">
                         <option value="General" selected>General (Default)</option>
