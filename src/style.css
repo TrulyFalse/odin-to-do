@@ -357,11 +357,18 @@ main {
   /* height: var(--todo-form-height); */
   height: auto;
 }
+#todo-form > * {
+  opacity: 0%;
+  transition: opacity var(--transition-m);
+}
+#main-create-todo-btn.open + #todo-form > *{
+  opacity: 100%;
+}
 
 #todo-form .scroll-container{
   padding: var(--separation-xs) 0;
   max-height: 500px;
-  overflow: auto;
+  overflow-y: scroll;
   border-top: var(--border-grey);
   border-bottom: var(--border-grey);
   transition: 1s;
@@ -417,6 +424,21 @@ main {
   width: 100%;
   padding-right: var(--del-btn-width);
 }
+#checklist li{
+  transition: height var(--transition-s), opacity var(--transition-s);
+  height: var(--separation-m);
+}
+@starting-style{
+  #checklist li{
+    height: 0;
+    opacity: 0;
+  }
+}
+#checklist li.removal-animation{
+  height: 0;
+  opacity: 0;
+}
+
 #checklist ol li input+button {
   margin-left: calc( -1 * var(--del-btn-width));
   width: var(--del-btn-width);

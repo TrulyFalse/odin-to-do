@@ -27,7 +27,8 @@ function initializePage(){
     const existingRemoveSubtaskBtns = document.querySelectorAll("#checklist li button:not([id='add-subtask-btn'])");
     for(let btn of [...existingRemoveSubtaskBtns]){
         btn.addEventListener('click', () => {
-                btn.parentElement.remove();
+            btn.parentElement.classList.toggle('removal-animation');
+            setTimeout(() => btn.parentElement.remove(), 400);
         })
     }
 
@@ -54,6 +55,31 @@ function initializePage(){
         renderToDo();
     });
 
+    const resetBtn = document.querySelector('#todo-form button[type="reset"]');
+    const checklistOrderedList = document.querySelector('#checklist ol');
+    resetBtn.addEventListener('click', () => {
+        let checklistSubtasks = document.querySelectorAll("#checklist ol li:not(:has(#add-subtask-btn))");
+        checklistSubtasks.forEach((subtask) => {subtask.remove()});
+        for(let i = 0; i < 3; i++){
+            let li = document.createElement('li');
+                let input = document.createElement('input');
+                input.type = 'text';
+                li.append(input);
+
+                let btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = '-';
+                btn.addEventListener('click', () => {
+                    li.classList.toggle('removal-animation');
+                    setTimeout(() => li.remove(), 400);
+                })
+                li.append(btn);
+            checklistOrderedList.insertBefore(li, addSubtaskBtn.parentElement);
+        }
+    })
+
+    const scrollContainer = todoForm.querySelector('.scroll-container');
+
     addSubtaskBtn.addEventListener('click', () => {
         // HTML structure to be added
         // <li><input type="text"><button type="button">-</button></li>
@@ -66,18 +92,38 @@ function initializePage(){
             btn.type = 'button';
             btn.textContent = '-';
             btn.addEventListener('click', () => {
-                li.remove();
+                li.classList.toggle('removal-animation');
+                setTimeout(() => li.remove(), 400);
             })
             li.append(btn);
-        let checklistOrderedList = document.querySelector('#checklist ol');
+        
         checklistOrderedList.insertBefore(li, addSubtaskBtn.parentElement);
-        let scrollContainer = todoForm.querySelector('.scroll-container');
-        scrollContainer.scrollTo({
-            top: scrollContainer.scrollHeight,
-            behavior: 'smooth',
-        });
-    });
 
+        // FlAWED approach, the auto scrolling effect will fail if the sleep time isn't exactly right. Also, the animation stutters a lot.
+        // function sleep(ms) {
+        //     return new Promise(resolve => setTimeout(resolve, ms));
+        // }
+        // async function autoScroll() {
+        //     let previousScrollHeight = scrollContainer.scrollHeight;
+        //     scrollContainer.scrollTo({top: previousScrollHeight});
+        //     await sleep(100);
+        //     if(scrollContainer.scrollHeight !== previousScrollHeight)
+        //         requestAnimationFrame(autoScroll);
+        // }
+        // requestAnimationFrame(autoScroll);
+
+        let startTime;
+        async function autoScroll() {
+            if(!startTime) startTime = performance.now();
+            let elapsed = performance.now() - startTime;
+            scrollContainer.scrollTo({top: scrollContainer.scrollHeight});
+            if(elapsed < 1000)
+                requestAnimationFrame(autoScroll);
+        }
+        requestAnimationFrame(autoScroll);
+    });
+    
+    
 
     const priorityRangeInput = document.querySelector('#todo-form .priority-box input[type="range"]');
     const priorityNumberInput = document.querySelector('#todo-form .priority-box input[type="number"]');
