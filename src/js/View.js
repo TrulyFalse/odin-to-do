@@ -134,6 +134,13 @@ function initializePage(){
         if(e.target.value === "") e.target.value = 1;
     })
 
+
+    const editDialogCloseBtn = document.querySelector('#todo-edit-dialog button.close-dialog');
+    const editDialog = document.querySelector('#todo-edit-dialog');
+    editDialogCloseBtn.addEventListener('click', (e) => {
+        editDialog.classList.toggle('open');
+        setTimeout(() => {editDialog.close()}, 1000);
+    })
 }
 
 function renderToDo(toDo) {
@@ -257,6 +264,12 @@ function renderToDo(toDo) {
             toDoStatus.append(p);
         toDoCard.append(toDoStatus);
     cardContainer.append(toDoCard);
+}
+
+function editTodo(toDo) {
+    const editDialog = document.querySelector('#todo-edit-dialog');
+    editDialog.showModal();
+    editDialog.classList.toggle('open');
 }
 
 export default {

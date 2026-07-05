@@ -53,6 +53,10 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 
 
 :root {
@@ -88,6 +92,7 @@ h1, h2, h3, h4, h5, h6 {
     --box-shadow-light: 0 7px 10px 0px rgba(0, 0, 0, 0.25);
     --box-shadow-xlight: 0 7px 10px 0px rgba(0, 0, 0, 0.08);
     --box-shadow-sidebar-items: -5px 5px 1px 0px rgba(0, 0, 0, 0.344);
+    --transition-xs: 0.2s;
     --transition-s: 0.5s;
     --transition-m: 1s;
 
@@ -97,6 +102,9 @@ h1, h2, h3, h4, h5, h6 {
     --border-radius-xs: 0.5rem;
     --border-radius-s: 1rem;
     --border-radius-m: 2rem;
+
+    --todo-form-width: 500px;
+    --todo-form-height: 325px;
 }
 
 body {
@@ -105,6 +113,17 @@ body {
     display: grid;
     grid-template: 1fr 85% / minmax(var(--sidebar-min-width), 15%) minmax(var(--main-min-width), 1fr);
     
+}
+
+
+#todo-edit-dialog {
+  opacity: 0%;
+  height: 0;
+  transition: height var(--transition-m), opacity var(--transition-m);
+}
+#todo-edit-dialog.open{
+  opacity: 100%;
+  height: var(--todo-form-height);
 }
 
 aside{
@@ -226,6 +245,8 @@ aside ul li{
   display: flex;
   align-items: center;
   gap: var(--separation-s);
+
+  transition: background-color var(--transition-xs);
 }
 
 aside ul li img{
@@ -240,6 +261,7 @@ aside ul li img.center{
 
 aside ul li:hover{
   background-color: rgba(0, 0, 0, 0.165);
+  cursor: pointer;
 }
 
 header{
@@ -313,7 +335,6 @@ main {
 }
 
 #main-create-todo-btn:hover {
-  cursor: pointer;
   background-size: 300%;
 }
 #main-create-todo-btn.open{
@@ -331,10 +352,48 @@ main {
   transform: rotate(135deg);
 }
 
-#todo-form {
-  --todo-form-width: 500px;
-  --todo-form-height: 325px;
+#search-form {
+  padding: var(--separation-xs) var(--separation-s);
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: max-content;
+  z-index: 3;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  gap: var(--separation-s);
+  box-shadow: var(--box-shadow-light);
+  border-radius: 0 0 var(--border-radius-s) 0;
+}
 
+#search-form button{
+  width: var(--btn-width-s);
+  border: none;
+  background-color: transparent;
+  transition: var(--transition-s);
+  border-radius: var(--border-radius-s);
+}
+#search-form button:hover{
+  background-color: rgba(0, 0, 0, 0.181);
+}
+#search-form input {
+  border: none;
+  border-bottom: var(--border-biege-light);
+}
+
+#edit-todo-form {
+  width: var(--todo-form-width);
+  height: auto;
+  background-color: white;
+  padding: var(--separation-m);
+  padding-bottom: var(--separation-s);
+  border-radius: var(--border-radius-s);
+  border: var(--border-biege);
+  box-shadow: var(--box-shadow-light);
+}
+
+#todo-form {
   width: var(--diameter-m);
   height: var(--diameter-m);
 
@@ -352,7 +411,7 @@ main {
 
   transition: width var(--transition-m), height var(--transition-m);
 }
-#main-create-todo-btn.open + #todo-form{
+#main-create-todo-btn.open ~ #todo-form{
   width: var(--todo-form-width);
   /* height: var(--todo-form-height); */
   height: auto;
@@ -361,11 +420,11 @@ main {
   opacity: 0%;
   transition: opacity var(--transition-m);
 }
-#main-create-todo-btn.open + #todo-form > *{
+#main-create-todo-btn.open ~ #todo-form > *{
   opacity: 100%;
 }
 
-#todo-form .scroll-container{
+form .scroll-container{
   padding: var(--separation-xs) 0;
   max-height: 500px;
   overflow-y: scroll;
@@ -374,7 +433,7 @@ main {
   transition: 1s;
 }
 
-#todo-form .fields {
+form .fields {
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: var(--separation-xs);
@@ -409,6 +468,7 @@ main {
 #todo-form textarea {
   height: calc(3.5 * var(--separation-m));
 }
+
 #todo-form button{
   background-color: white;
 }
@@ -476,7 +536,6 @@ main {
   border-radius: var(--border-radius-s) var(--border-radius-xs) 0 0;
 }
 #todo-form button:hover {
-  cursor: pointer;
   background-color: rgb(255, 234, 196);
 }
 
@@ -633,8 +692,6 @@ main > div {
 
   overflow: visible;
   transition: background-color var(--transition-m);
-
-  cursor: pointer;
 }
 
 .is-done-btn.done{

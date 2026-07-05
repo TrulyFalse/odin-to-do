@@ -8,6 +8,62 @@
 </head>
 <body>
 
+    <dialog id="todo-edit-dialog">
+        <form action="" method="post" id="edit-todo-form">
+            <h2>Create To-Do</h2>
+            <div class="scroll-container">
+                <div class="fields">
+                    <label for="edit-title">Title</label><input type="text" id="edit-title" name="title" required>
+                    <label for="edit-description">Description</label><textarea id="edit-description" name="description" row="50" col="20"></textarea>
+                    <label for="edit-due-date">Due date</label><input type="datetime-local" min="2026-06-28T18:53" id="edit-due-date" name="due-date">
+                    <label for="edit-priority">Priority</label>
+                    <div class="priority-box">
+                        <input type="range" min="1" max="10" id="edit-priority" name="priority" list="priority-markers" value="3">
+                        <input type="number" min="1" max="10" id="edit-priority-direct-input" name="priority-direct-input" value="3">
+                    </div>
+                    <datalist id="edit-priority-markers">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                        <option value="6"></option>
+                        <option value="7"></option>
+                        <option value="8"></option>
+                        <option value="9"></option>
+                        <option value="10"></option>
+                    </datalist>
+                    <label for="edit-project">Project</label>
+                    <select id="edit-project" name="project">
+                        <option value="General" selected>General (Default)</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Workout">Workout</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Hangouts">Hangouts</option>
+                    </select>
+                </div>
+                <hr>
+                <label for="edit-checklist">Checklist</label>
+                <div id="edit-checklist">
+                    <ol>
+                        <li><input type="text"><button type="button">-</button></li>
+                        <li><input type="text"><button type="button">-</button></li>
+                        <li><input type="text"><button type="button">-</button></li>
+                        <li><button id="edit-add-subtask-btn" type="button">+</button></li>
+                    </ol>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button type="submit">Save</button>
+                <button type="reset">Clear</button>
+                <button class="close-dialog" type="button">Cancel</button>
+                <div class="create-todo-btn-gap">
+                    <div></div>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
     <aside>
         <div id="profile-bar">
             <img id="pfp" src="./img/pfp.jpeg" alt="your-pfp">
@@ -58,6 +114,17 @@
         <button id="main-create-todo-btn">
             <p>+</p>
         </button>
+        <form id="search-form" action="" method="post">
+            <input type="text" id="search-input" name="search-string" placeholder="Search here">
+            
+            <button type="submit">
+                <img src="./img/search-icon.png" alt="search icon">
+            </button>
+
+            <button type="button">
+                <img src="./img/sort-icon.png" alt="sort icon">
+            </button>
+        </form>
 
         <form action="" method="post" id="todo-form">
             <h2>Create To-Do</h2>
