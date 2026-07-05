@@ -52,15 +52,17 @@ export class ToDo{
         }
         
         return timeLeft;
-
         // in view write a string as such: `${timeLeft.days ? timeLeft.days + " day " : ""} ${timeLeft.hours ? timeLeft.hours + " hour " : ""} ${timeLeft.mins} min`
     }
     
     get progress(){
-        if(this.checklist.length == 0)
-            return 'N/A';
-        let numChecked = this.checklist.reduce((count, current) => { if (current.isDone) return count++; }, 0);
-        return {numChecked, totalSubtasks: this.checklist.length};
+        if(this.checklist.length === 0)
+            return null;
+        // let numChecked = this.checklist.reduce((count, current) => { if (current.isDone) return count++; }, 0);
+        let numChecked = this.checklist.filter((subtask) => subtask.isDone).length;
+        let totalSubtasks = this.checklist.length;
+        let isAllComplete = numChecked === totalSubtasks;
+        return {numChecked, totalSubtasks, isAllComplete};
     }
 
     get priority(){return this.#priority;}
@@ -78,9 +80,12 @@ export class ToDo{
     }
     deleteSubtask(index){this.#checklist.splice(index, 1);}
     
-    get isDone(){return this.#isDone;}
+    get isDone(){
+        if(this.progress !== null && !this.progress.isAllComplete) this.#isDone = false;
+        return this.#isDone;
+    }
     set isDone(givenIsDone){
-        if(this.progress !== 'N/A' && this.progress.numChecked < this.progress.totalSubtasks)
+        if(this.progress !== null && this.progress.numChecked < this.progress.totalSubtasks)
             throw new Error("Cannot set task as done while checklist remains incompleted.");
         this.#isDone = givenIsDone;
     }

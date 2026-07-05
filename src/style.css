@@ -546,7 +546,11 @@ main > div {
 .todo-card .todo-status{
   display: flex;
   width: 100%;
-  align-items: center; 
+  align-items: flex-end; 
+  gap: var(--separation-s);
+}
+.todo-card .todo-status > div:first-of-type {
+  flex: auto;
 }
 
 .todo-status > div > * {
@@ -554,9 +558,12 @@ main > div {
 }
 
 .todo-status .progress {
+  /* width: max-content; */
   border: var(--border-biege-light);
   border-radius: var(--border-radius-s);
   position: relative;
+  width: 50%;
+  min-width: 250px;
   transition: background-color var(--transition-s), border-radius var(--transition-s);
 }
 
@@ -564,9 +571,17 @@ main > div {
   border-radius: var(--border-radius-s) var(--border-radius-s) 0 0;
   background-color: rgba(137, 137, 137, 0.366);
 }
+.todo-status .progress > p:first-of-type{
+  display: flex;
+  align-items: center;
+  gap: var(--separation-s);
+  height: var(--btn-width-s);
+}
+.todo-status .progress progress {
+  flex: auto;
+}
 
 .todo-status .subtasks {
-  overflow: hidden;
   border-radius: 0 0 var(--border-radius-s) var(--border-radius-s);
   box-shadow: var(--box-shadow-light);
   background-color: rgb(244, 244, 244);
@@ -576,7 +591,7 @@ main > div {
   right: 0;
 
   max-height: 150px;
-  overflow: auto;
+  overflow-y: scroll;
 
   box-sizing: border-box;
   height: 0;
@@ -592,20 +607,23 @@ main > div {
   list-style-position: inside;
   border-bottom: var(--border-biege-light);
 }
+.subtasks li::marker{
+  font-size: 0.85em;
+  color: rgb(150, 150, 150);
+}
 
 .subtasks li > div {
-  width: 80%;
+  width: 90%;
   display: inline-flex;
   justify-content: space-between;
+  padding-left: var(--separation-xs);
 }
 
 
 .todo-card .is-done-btn {
-
   --tick-size: 3.5rem;
 
   flex: none;
-  margin-right: 20px;
   margin-left: auto;
   width: var(--btn-width-s);
   height: var(--btn-width-s);
@@ -615,6 +633,8 @@ main > div {
 
   overflow: visible;
   transition: background-color var(--transition-m);
+
+  cursor: pointer;
 }
 
 .is-done-btn.done{
@@ -635,4 +655,11 @@ main > div {
 .is-done-btn img {
   min-width: var(--tick-size);
   min-height: var(--tick-size);
+}
+
+
+.todo-status > p:last-of-type{
+  height: var(--btn-width-s);
+  display: flex;
+  align-items: center;
 }
