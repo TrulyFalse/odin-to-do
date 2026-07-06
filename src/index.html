@@ -8,9 +8,9 @@
 </head>
 <body>
 
-    <dialog id="todo-edit-dialog">
-        <form action="" method="post" id="edit-todo-form">
-            <h2>Create To-Do</h2>
+    <dialog id="todo-edit-dialog" closedby="any">
+        <form action="" method="post" id="edit-todo-form" class="todo-form">
+            <h2>Edit To-Do</h2>
             <div class="scroll-container">
                 <div class="fields">
                     <label for="edit-title">Title</label><input type="text" id="edit-title" name="title" required>
@@ -44,7 +44,7 @@
                 </div>
                 <hr>
                 <label for="edit-checklist">Checklist</label>
-                <div id="edit-checklist">
+                <div class="checklist" id="edit-checklist">
                     <ol>
                         <li><input type="text"><button type="button">-</button></li>
                         <li><input type="text"><button type="button">-</button></li>
@@ -57,9 +57,7 @@
                 <button type="submit">Save</button>
                 <button type="reset">Clear</button>
                 <button class="close-dialog" type="button">Cancel</button>
-                <div class="create-todo-btn-gap">
-                    <div></div>
-                </div>
+                
             </div>
         </form>
     </dialog>
@@ -126,7 +124,7 @@
             </button>
         </form>
 
-        <form action="" method="post" id="todo-form">
+        <form action="" method="post" id="create-todo-form" class="todo-form">
             <h2>Create To-Do</h2>
             <div class="scroll-container">
                 <div class="fields">
@@ -161,7 +159,7 @@
                 </div>
                 <hr>
                 <label for="checklist">Checklist</label>
-                <div id="checklist">
+                <div class="checklist" id="checklist">
                     <ol>
                         <li><input type="text"><button type="button">-</button></li>
                         <li><input type="text"><button type="button">-</button></li>
@@ -179,7 +177,7 @@
             </div>
         </form>
 
-        <div>
+        <div class="scroll-container">
             <div class="todo-card">
                 <div class="header">
                     <h3>Buy all the groceries</h3>

@@ -7,10 +7,29 @@ import TICK_ICON_PATH from "../img/tick.svg";
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
-const createTodoBtn = document.querySelector('#todo-form button[type="submit"]');
-const todoForm = document.querySelector('#todo-form');
+const createTodoBtn = document.querySelector('#create-todo-form button[type="submit"]');
+const todoForm = document.querySelector('#create-todo-form');
 const addSubtaskBtn = document.querySelector('#add-subtask-btn');
 const cardContainer = document.querySelector('main > div');
+
+const sortConfigs = {
+    // sorted by
+    TITLE: "title",
+    DUE_DATE: "dueDate",
+    PRIORITY: "priority",
+    PROGRESS: "progressPercentage",
+    DONE: "isDone",
+    // order
+    ASCENDING: "asc",
+    DESCENDING: "desc",
+}
+
+let currentSortConfig = {
+    sortedBy: sortConfigs.DUE_DATE,
+    order: sortConfigs.ASCENDING,
+}
+
+let currentProjectList = LocalDB.pendingToday();
 
 function initializePage(){
     addBtn.addEventListener('click', () => {
@@ -27,7 +46,7 @@ function initializePage(){
         document.addEventListener('click', closeOnExternalClick);
     });
 
-    const existingRemoveSubtaskBtns = document.querySelectorAll("#checklist li button:not([id='add-subtask-btn'])");
+    const existingRemoveSubtaskBtns = document.querySelectorAll("#create-todo-form .checklist li button:not([id='add-subtask-btn'])");
     for(let btn of [...existingRemoveSubtaskBtns]){
         btn.addEventListener('click', () => {
             btn.parentElement.classList.toggle('removal-animation');
@@ -37,11 +56,11 @@ function initializePage(){
 
     createTodoBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        if(!document.forms['todo-form'].reportValidity()) return;
+        if(!document.forms['create-todo-form'].reportValidity()) return;
 
         // turn nodelist to array, map all textContent to array value, filter off empty values
         let checklist = 
-        [...todoForm.querySelectorAll('#checklist input')]
+        [...todoForm.querySelectorAll('#create-todo-form .checklist input')]
         .map((value) => {return {description: value.value}})
         .filter((subtask) => subtask.description);
 
@@ -57,12 +76,23 @@ function initializePage(){
         let newTodoObject = new ToDo(newTodo);
         LocalDB.getProject(newTodo.project).addToDo(newTodoObject);
         renderToDo(newTodoObject);
+        
+        // let scrollContainer = document.querySelector('main > .scroll-container');
+        // let startTime;
+        // function autoScroll() {
+        //     if(!startTime) startTime = performance.now();
+        //     let elapsed = performance.now() - startTime;
+        //     scrollContainer.scrollTo({top: scrollContainer.scrollHeight});
+        //     if(elapsed < 500)
+        //         requestAnimationFrame(autoScroll);
+        // }
+        // requestAnimationFrame(autoScroll);
     });
 
-    const resetBtn = document.querySelector('#todo-form button[type="reset"]');
-    const checklistOrderedList = document.querySelector('#checklist ol');
+    const resetBtn = document.querySelector('#create-todo-form button[type="reset"]');
+    const checklistOrderedList = document.querySelector('#create-todo-form .checklist ol');
     resetBtn.addEventListener('click', () => {
-        let checklistSubtasks = document.querySelectorAll("#checklist ol li:not(:has(#add-subtask-btn))");
+        let checklistSubtasks = document.querySelectorAll("#create-todo-form .checklist ol li:not(:has(#add-subtask-btn))");
         checklistSubtasks.forEach((subtask) => {subtask.remove()});
         for(let i = 0; i < 3; i++){
             let li = document.createElement('li');
@@ -104,7 +134,7 @@ function initializePage(){
         checklistOrderedList.insertBefore(li, addSubtaskBtn.parentElement);
 
         let startTime;
-        async function autoScroll() {
+        function autoScroll() {
             if(!startTime) startTime = performance.now();
             let elapsed = performance.now() - startTime;
             scrollContainer.scrollTo({top: scrollContainer.scrollHeight});
@@ -116,8 +146,8 @@ function initializePage(){
     
     
 
-    const priorityRangeInput = document.querySelector('#todo-form .priority-box input[type="range"]');
-    const priorityNumberInput = document.querySelector('#todo-form .priority-box input[type="number"]');
+    const priorityRangeInput = document.querySelector('#create-todo-form .priority-box input[type="range"]');
+    const priorityNumberInput = document.querySelector('#create-todo-form .priority-box input[type="number"]');
     
     priorityRangeInput.addEventListener('input', (e)=>{
         priorityNumberInput.value = e.target.value;
@@ -138,13 +168,19 @@ function initializePage(){
     const editDialogCloseBtn = document.querySelector('#todo-edit-dialog button.close-dialog');
     const editDialog = document.querySelector('#todo-edit-dialog');
     editDialogCloseBtn.addEventListener('click', (e) => {
-        editDialog.classList.toggle('open');
+        let cancelDialogEvent = new Event('cancel');
+        editDialog.dispatchEvent(cancelDialogEvent);
+    })
+    editDialog.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        editDialog.classList.remove('open');
         setTimeout(() => {editDialog.close()}, 1000);
     })
 }
 
 function renderToDo(toDo) {
     let toDoCard = document.createElement('div');
+    toDoCard.dataset.id = toDo.id;
     toDoCard.classList.toggle('todo-card');
 
         let header = document.createElement('div');
@@ -263,13 +299,28 @@ function renderToDo(toDo) {
             p.textContent = "Done";
             toDoStatus.append(p);
         toDoCard.append(toDoStatus);
-    cardContainer.append(toDoCard);
+
+    // sort into place
+    // cardContainer.append(toDoCard);
+    let sortedToDoList = LocalDB.pendingToday().sort((toDoA, toDoB) => {
+        let toDoASortValue = toDoA[currentSortConfig.sortedBy];
+        let toDoBSortValue = toDoB[currentSortConfig.sortedBy];
+        if(currentSortConfig.order === sortConfigs.ASCENDING){
+            if(toDoASortValue < toDoBSortValue) return -1;
+            else if(toDoASortValue > toDoBSortValue) return 1;
+            else return 0;
+        } else {
+            if(toDoASortValue < toDoBSortValue) return 1;
+            else if(toDoASortValue > toDoBSortValue) return -1;
+            else return 0;
+        }
+    });
 }
 
 function editTodo(toDo) {
     const editDialog = document.querySelector('#todo-edit-dialog');
     editDialog.showModal();
-    editDialog.classList.toggle('open');
+    editDialog.classList.add('open');
 }
 
 export default {

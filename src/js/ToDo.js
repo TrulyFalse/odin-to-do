@@ -64,6 +64,9 @@ export class ToDo{
         let isAllComplete = numChecked === totalSubtasks;
         return {numChecked, totalSubtasks, isAllComplete};
     }
+    get progressPercentage(){
+        return (this.progress.numChecked / this.progress.totalSubtasks) * 100;
+    }
 
     get priority(){return this.#priority;}
     set priority(givenPriority){

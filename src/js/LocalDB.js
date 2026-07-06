@@ -30,4 +30,13 @@ function deserialize(){
         projects.push(new Project(rawProject));
 }
 
-export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize};
+
+function pendingToday(){
+    let toDosToday = [];
+    for(let project in projects)
+        toDosToday = toDosToday.concat(project.toDoList.filter((toDo) => toDo.dueDate.toDateString() === new Date().toDateString));
+    
+    return toDosToday;
+}
+
+export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize, pendingToday};

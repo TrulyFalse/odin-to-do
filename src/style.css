@@ -104,7 +104,7 @@ button:hover {
     --border-radius-m: 2rem;
 
     --todo-form-width: 500px;
-    --todo-form-height: 325px;
+    --todo-form-height: 525px;
 }
 
 body {
@@ -117,13 +117,8 @@ body {
 
 
 #todo-edit-dialog {
-  opacity: 0%;
-  height: 0;
-  transition: height var(--transition-m), opacity var(--transition-m);
-}
-#todo-edit-dialog.open{
-  opacity: 100%;
-  height: var(--todo-form-height);
+  background-color: transparent;
+  border: none;
 }
 
 aside{
@@ -382,7 +377,7 @@ main {
   border-bottom: var(--border-biege-light);
 }
 
-#edit-todo-form {
+#todo-edit-dialog #edit-todo-form {
   width: var(--todo-form-width);
   height: auto;
   background-color: white;
@@ -391,9 +386,18 @@ main {
   border-radius: var(--border-radius-s);
   border: var(--border-biege);
   box-shadow: var(--box-shadow-light);
+  overflow: hidden;
+
+  opacity: 0%;
+  height: 0;
+  transition: height var(--transition-m), opacity var(--transition-m);
+}
+#todo-edit-dialog.open #edit-todo-form{
+  opacity: 100%;
+  height: 625px;
 }
 
-#todo-form {
+#create-todo-form {
   width: var(--diameter-m);
   height: var(--diameter-m);
 
@@ -411,16 +415,16 @@ main {
 
   transition: width var(--transition-m), height var(--transition-m);
 }
-#main-create-todo-btn.open ~ #todo-form{
+#main-create-todo-btn.open ~ #create-todo-form{
   width: var(--todo-form-width);
   /* height: var(--todo-form-height); */
   height: auto;
 }
-#todo-form > * {
+#create-todo-form > * {
   opacity: 0%;
   transition: opacity var(--transition-m);
 }
-#main-create-todo-btn.open ~ #todo-form > *{
+#main-create-todo-btn.open ~ #create-todo-form > *{
   opacity: 100%;
 }
 
@@ -438,41 +442,41 @@ form .fields {
   grid-template-columns: max-content 1fr;
   gap: var(--separation-xs);
 }
-#todo-form .fields + hr{
+.todo-form .fields + hr{
   margin: var(--separation-xs) 0;
 }
 
-#todo-form input, #todo-form textarea, #todo-form button, #todo-form select{
+.todo-form input, .todo-form textarea, .todo-form button, .todo-form select{
   border-radius: var(--border-radius-xs);
   border: var(--border-biege-light);
   height: var(--separation-m);
 }
-#todo-form input:not([type="range"]), #todo-form textarea, #todo-form select{
+.todo-form input:not([type="range"]), .todo-form textarea, .todo-form select{
   box-shadow: inset var(--box-shadow-xlight);
   background-color: rgb(246, 246, 246);
   padding: 0 var(--separation-s);
 }
-#todo-form .priority-box {
+.todo-form .priority-box {
   display: flex;
   gap: var(--separation-s);
   align-items: center;
 }
-#todo-form .priority-box input[type="range"] {
+.todo-form .priority-box input[type="range"] {
   flex: auto;
 }
-#todo-form .priority-box input[type="number"] {
+.todo-form .priority-box input[type="number"] {
   max-width: var(--btn-width-m);
   padding: 0 0 0 var(--separation-xs);
 }
 
-#todo-form textarea {
+.todo-form textarea {
   height: calc(3.5 * var(--separation-m));
 }
 
-#todo-form button{
+.todo-form button{
   background-color: white;
 }
-#checklist ol {
+.checklist ol {
   --del-btn-width: 30px;
 
   display: flex;
@@ -480,37 +484,36 @@ form .fields {
   gap: var(--separation-xs);
   align-items: stretch;
 }
-#checklist ol input{
+.checklist ol input{
   width: 100%;
   padding-right: var(--del-btn-width);
 }
-#checklist li{
+.checklist li{
   transition: height var(--transition-s), opacity var(--transition-s);
   height: var(--separation-m);
 }
 @starting-style{
-  #checklist li{
+  .checklist li{
     height: 0;
-    opacity: 0;
   }
 }
-#checklist li.removal-animation{
+.checklist li.removal-animation{
   height: 0;
   opacity: 0;
 }
 
-#checklist ol li input+button {
+.checklist ol li input+button {
   margin-left: calc( -1 * var(--del-btn-width));
   width: var(--del-btn-width);
 }
-#checklist ol li:last-of-type{
+.checklist ol li:last-of-type{
   list-style-type: none;
 }
-#checklist ol li:last-of-type button{
+.checklist ol li:last-of-type button{
   width: 100%;
 }
 
-#todo-form .form-buttons{
+.todo-form .form-buttons{
   display: flex;
   gap: var(--separation-xs);
   margin-top: var(--separation-s);
@@ -535,7 +538,7 @@ form .fields {
   height: calc(1.1 * var(--diameter-m));
   border-radius: var(--border-radius-s) var(--border-radius-xs) 0 0;
 }
-#todo-form button:hover {
+.todo-form button:hover {
   background-color: rgb(255, 234, 196);
 }
 
@@ -563,9 +566,17 @@ main > div {
   border-radius: var(--border-radius-m);
   
   background-image: linear-gradient(to top, rgba(255, 255, 255, 0.442)), var(--marble-img-path-horizontal);
-    background-position: center;
-    background-size: cover;
-    box-shadow: var(--box-shadow-light);
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--box-shadow-light);
+
+  height: 350px;
+  transition: height var(--transition-s), opacity var(--transition-s);
+
+  @starting-style{
+    height: 0;
+    opacity: 0;
+  }
 }
 
 .todo-card .header {
