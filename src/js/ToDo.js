@@ -18,6 +18,7 @@ export class ToDo{
     #priority;
     #checklist = [];
     #isDone;
+    #dateCreated;
 
     constructor( {title, description, dueDate, priority, isDone = false, checklist} ){
         this.#id = ToDo.idCounter++;
@@ -31,6 +32,7 @@ export class ToDo{
                 this.#checklist.push(new Subtask(item));
 
         this.#isDone = isDone;
+        this.#dateCreated = new Date();
     }
 
     get id(){return this.#id;}
@@ -93,6 +95,8 @@ export class ToDo{
         this.#isDone = givenIsDone;
     }
 
+    get dateCreated() {return this.#dateCreated;}
+    
     toJSON(){
         return {
             title: this.title,

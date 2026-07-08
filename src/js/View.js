@@ -10,26 +10,140 @@ const addBtn = document.querySelector('#main-create-todo-btn');
 const createTodoBtn = document.querySelector('#create-todo-form button[type="submit"]');
 const todoForm = document.querySelector('#create-todo-form');
 const addSubtaskBtn = document.querySelector('#add-subtask-btn');
-const cardContainer = document.querySelector('main > div');
+const cardContainer = document.querySelector('main div.card-container');
 
-const sortConfigs = {
-    // sorted by
-    TITLE: "title",
-    DUE_DATE: "dueDate",
-    PRIORITY: "priority",
-    PROGRESS: "progressPercentage",
-    DONE: "isDone",
-    // order
-    ASCENDING: "asc",
-    DESCENDING: "desc",
+const sorter = {
+    // ENUM values
+    ENUM: {
+        // sorted by
+        TITLE: "title",
+        DUE_DATE: "dueDate",
+        PRIORITY: "priority",
+        PROGRESS: "progressPercentage",
+        DONE: "isDone",
+        DATE_CREATED: "dateCreated",
+        // order
+        ASCENDING: "asc",
+        DESCENDING: "desc",
+    },
+
+    // settings that will hold said ENUM
+    sortedBy,
+    order,
+
+    sort(list){
+        let unsortableToDos = [];
+        let sortedList = 
+        list
+        .filter((toDo) => {
+            let isSortable = toDo[this.sortedBy] && !isNaN(toDo[this.sortedBy]);
+            if(!isSortable) unsortableToDos.push(toDo);
+            return isSortable;
+        })
+        .sort((toDoA, toDoB) => {
+            let toDoASortValue = toDoA[this.sortedBy];
+            let toDoBSortValue = toDoB[this.sortedBy];
+            if(this.order === this.ASCENDING){
+                if(toDoASortValue < toDoBSortValue) return -1;
+                else if(toDoASortValue > toDoBSortValue) return 1;
+                else return 0;
+            } else {
+                if(toDoASortValue < toDoBSortValue) return 1;
+                else if(toDoASortValue > toDoBSortValue) return -1;
+                else return 0;
+            }
+        })
+        .concat(unsortableToDos);
+        return sortedList;
+    }
+}
+sorter.sortedBy = sorter.ENUM.DUE_DATE;
+sorter.order = sorter.ENUM.ASCENDING;
+
+
+
+
+// some DB "view" functions of the LocalDB
+function allToDos(){
+    let allToDos = [];
+    for(let project in LocalDB.projects)
+        for(let toDo in project.toDoList)
+            allToDos.push(toDo);
+    return allToDos;
+}
+function pendingToday(){
+    let toDosToday = [];
+    for(let project in LocalDB.projects)
+        toDosToday = toDosToday.concat(project.toDoList.filter((toDo) => toDo.dueDate.toDateString() === new Date().toDateString));  
+    return toDosToday;
+}
+function upcomingToDos(){
+    let toDosUpcoming = [];
+    for(let project in LocalDB.projects)
+        toDosUpcoming = toDosUpcoming.concat(project.toDoList.filter((toDo) => toDo.timeLeft.days < 7));  
+    return toDosUpcoming;
+}
+function filteredToDos(filterConstraints){
+    // feature to be added later!
 }
 
-let currentSortConfig = {
-    sortedBy: sortConfigs.DUE_DATE,
-    order: sortConfigs.ASCENDING,
-}
+// setting up a webpage DB-view state, for ease of refreshing 
+// (because we are only getting copies of the DB in the frontend and we don't have a live feed of it, we must remember what view of the DB we had to be able to refresh it and sync the changes made)
+const DBView = {
+    filterConstraints: {
+        unifiedSearchString,
+        titleSearchString,
+        descriptionSearchString,
+        dueDateRange: {min, max},
+        timeLeftRange: {min, max},
+        priorityRange: {min, max},
+        projectPool: [],
+        checklistFilters: {
+            progressRange: {min, max},
+            numCheckedRange: {min, max},
+            totalSubtasksRange: {min, max}
+        },
+        isDoneConstraint,
+        dateCreatedRange: {min, max},
+    },
+    currentProjectViewed,
 
-let currentProjectList = LocalDB.pendingToday();
+    // enum
+    ENUM: {
+        ALL: 'all' ,
+        TODAY: 'today',
+        UPCOMING: 'upcoming',
+        FILTERED: 'filtered',
+        PROJECT: 'project',
+    },
+
+    // setting holding enum
+    currentListSetting,
+    
+    list,
+    refreshList(){
+        switch(this.currentListSetting){
+            case this.ALL:
+                this.list = sorter.sort(allToDos());
+                break;
+            case this.TODAY:
+                this.list = sorter.sort(pendingToday());
+                break;
+            case this.UPCOMING:
+                this.list = sorter.sort(upcomingToDos());
+                break;
+            case this.FILTERED:
+                this.list = sorter.sort(filteredToDos(filterConstraints));
+                break;
+            case this.PROJECT:
+                this.list = sorter.sort(LocalDB.getProject(currentProjectViewed));
+                break;
+            default:
+                throw new Error("Unknown state in view config");
+        }
+    }
+}
+DBView.currentListSetting = DBView.ENUM.ALL;
 
 function initializePage(){
     addBtn.addEventListener('click', () => {
@@ -75,7 +189,11 @@ function initializePage(){
         }
         let newTodoObject = new ToDo(newTodo);
         LocalDB.getProject(newTodo.project).addToDo(newTodoObject);
-        renderToDo(newTodoObject);
+
+        DBView.refreshList();
+        let indexOfNewToDo = DBView.list.findIndex((item) => item.id === newTodoObject.id);
+        if(indexOfNewToDo !== -1)
+            renderToDo(newTodoObject);
         
         // let scrollContainer = document.querySelector('main > .scroll-container');
         // let startTime;
@@ -177,6 +295,7 @@ function initializePage(){
         setTimeout(() => {editDialog.close()}, 1000);
     })
 }
+
 
 function renderToDo(toDo) {
     let toDoCard = document.createElement('div');
@@ -299,22 +418,18 @@ function renderToDo(toDo) {
             p.textContent = "Done";
             toDoStatus.append(p);
         toDoCard.append(toDoStatus);
-
-    // sort into place
-    // cardContainer.append(toDoCard);
-    let sortedToDoList = LocalDB.pendingToday().sort((toDoA, toDoB) => {
-        let toDoASortValue = toDoA[currentSortConfig.sortedBy];
-        let toDoBSortValue = toDoB[currentSortConfig.sortedBy];
-        if(currentSortConfig.order === sortConfigs.ASCENDING){
-            if(toDoASortValue < toDoBSortValue) return -1;
-            else if(toDoASortValue > toDoBSortValue) return 1;
-            else return 0;
-        } else {
-            if(toDoASortValue < toDoBSortValue) return 1;
-            else if(toDoASortValue > toDoBSortValue) return -1;
-            else return 0;
-        }
-    });
+    
+    let isCardContainerEmptyOfCards = [...cardContainer.querySelectorAll('.todo-card')].length === 0;
+    if(!isCardContainerEmptyOfCards){
+        // finding a reference to the card node that our new card will be inserted before
+        let newToDoIndex = DBView.list.findIndex((currentToDo) => newTodoObject.id === currentToDo.id);
+        let adjacentCard = cardContainer.children[newToDoIndex]; // new Todo's to-be adjacent card currently remains at the new Todo's index (because it hasn't been inserted before it yet)
+        // inserting before ref node
+        if(adjacentCard) 
+            cardContainer.insertBefore(toDoCard, adjacentCard);
+        else
+            cardContainer.append(toDoCard);
+    }
 }
 
 function editTodo(toDo) {

@@ -7,7 +7,7 @@ function initialize(){
     if(!localStorage[LOCAL_STORAGE_KEY]){
         let generalProject = new Project({name: "General", toDoList: []});
         projects.push(generalProject);
-    } else this.deserialize();
+    } else deserialize();
 }
 
 function getProject(name){return projects.find((project) => project.name === name);}
@@ -30,13 +30,4 @@ function deserialize(){
         projects.push(new Project(rawProject));
 }
 
-
-function pendingToday(){
-    let toDosToday = [];
-    for(let project in projects)
-        toDosToday = toDosToday.concat(project.toDoList.filter((toDo) => toDo.dueDate.toDateString() === new Date().toDateString));
-    
-    return toDosToday;
-}
-
-export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize, pendingToday};
+export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize};
