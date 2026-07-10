@@ -1,4 +1,5 @@
 import Project from "./Project.js";
+import {ToDo} from "./ToDo.js";
 
 const LOCAL_STORAGE_KEY = 'projects';
 let projects = [];
@@ -6,6 +7,27 @@ let projects = [];
 function initialize(){
     if(!localStorage[LOCAL_STORAGE_KEY]){
         let generalProject = new Project({name: "General", toDoList: []});
+        
+        let sampleTodo = new ToDo({
+            title: "Buy all the groceries",
+            description: `On the way from college make sure to get the following:
+                                1. Carrots
+                                2. Broccoli
+                                3. Rice
+                                4. Chicken`,
+            dueDate: new Date('2026-07-13T06:30:00'),
+            priority: 2,
+            isDone: false,
+            checklist: [
+                {description: "Subtask-1"},
+                {description: "Subtask-1"},
+                {description: "Subtask-1"},
+                {description: "Subtask-1"},
+                {description: "Subtask-1"},
+                {description: "Subtask-1"},
+            ]
+        });
+        generalProject.addToDo(sampleTodo);
         projects.push(generalProject);
     } else deserialize();
 }
