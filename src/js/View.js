@@ -342,9 +342,23 @@ function renderToDo(toDo) {
             let isDoneBtn = document.createElement('button');
             let div = document.createElement('div');
 
+            function shortenDate(givenDate){
+                let present = new Date();
+                let shortDateString = "";
+                let dateSuffix = {
+                    '1': 'st ',
+                    '2': 'nd ',
+                    '3': 'rd ',
+                }
+                if(givenDate.getDate() !== present.getDate() || givenDate.getMonth() !== present.getMonth()) shortDateString += givenDate.getDate().toString() + (dateSuffix[givenDate.getDate().toString().at(-1)] ?? 'th ') + givenDate.toDateString().split(" ")[1];
+                if(givenDate.getFullYear() !== present.getFullYear()) shortDateString += " " + givenDate.getFullYear();
+                return `${shortDateString} ${givenDate.getHours()}:${givenDate.getMinutes()}`;
+            }
+            
+
                 let p = document.createElement('p');
                 if(toDo.dueDate instanceof Date && !isNaN(toDo.dueDate))
-                    p.textContent = `Due: ${toDo.dueDate} (${toDo.timeLeft.days}D ${toDo.timeLeft.hours}H ${toDo.timeLeft.mins}M left)`;
+                    p.textContent = `Due: ${shortenDate(toDo.dueDate)} (${toDo.timeLeft.days > 0 ? toDo.timeLeft.days + "D ": ""} ${toDo.timeLeft.hours > 0 ? toDo.timeLeft.hours + "H " : ""} ${toDo.timeLeft.mins > 0 ? toDo.timeLeft.mins : "0"}M left)`;
                 else
                     p.textContent = `Due: No deadline`;
                 div.append(p);
@@ -451,6 +465,11 @@ function renderView(){
 
 function editTodo(toDo) {
     const editDialog = document.querySelector('#todo-edit-dialog');
+    editDialog.querySelector('#edit-title').value = toDo.title;
+    editDialog.querySelector('#edit-description').value = toDo.description;
+    editDialog.querySelector('#edit-due-date').value = toDo.dueDate;
+    editDialog.querySelector('#edit-priority').value = toDo.priority;
+
     editDialog.showModal();
     editDialog.classList.add('open');
 }

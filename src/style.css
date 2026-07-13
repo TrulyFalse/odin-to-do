@@ -471,6 +471,7 @@ form .fields {
 
 .todo-form textarea {
   height: calc(3.5 * var(--separation-m));
+  resize: vertical;
 }
 
 .todo-form button{

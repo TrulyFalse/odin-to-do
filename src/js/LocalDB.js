@@ -11,20 +11,19 @@ function initialize(){
         let sampleTodo = new ToDo({
             title: "Buy all the groceries",
             description: `On the way from college make sure to get the following:
-                                1. Carrots
-                                2. Broccoli
-                                3. Rice
-                                4. Chicken`,
-            dueDate: new Date('2026-07-13T06:30:00'),
+            1. Carrots
+            2. Broccoli
+            3. Rice
+            4. Chicken`,
+            dueDate: new Date('2026-07-20T06:30:00'),
             priority: 2,
             isDone: false,
             checklist: [
-                {description: "Subtask-1"},
-                {description: "Subtask-1"},
-                {description: "Subtask-1"},
-                {description: "Subtask-1"},
-                {description: "Subtask-1"},
-                {description: "Subtask-1"},
+                {description: "Carrot"},
+                {description: "Broccoli"},
+                {description: "Rice"},
+                {description: "Chicken"},
+                {description: "Jot down expense"},
             ]
         });
         generalProject.addToDo(sampleTodo);
