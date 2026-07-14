@@ -14,7 +14,10 @@ export default class Project{
 
     get toDoList(){return this.#toDoList.slice();}
     addToDo(ToDo){this.#toDoList.push(ToDo);}
-    removeToDo(index){this.#toDoList.splice(index, 1);}
+    removeToDo(givenToDo){
+        let index = this.#toDoList.findIndex((toDo) => toDo.id === givenToDo.id);
+        this.#toDoList.splice(index, 1);
+    }
 
     toJSON(){
         return{

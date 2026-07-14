@@ -14,7 +14,7 @@ export class ToDo{
     #id;
     title;
     description;
-    dueDate;
+    #dueDate;
     #priority;
     #checklist = [];
     #isDone;
@@ -70,8 +70,12 @@ export class ToDo{
         return (this.progress.numChecked / this.progress.totalSubtasks) * 100;
     }
 
+    get dueDate(){return this.#dueDate;}
+    set dueDate(givenDueDate){this.#dueDate = (givenDueDate instanceof Date) ? givenDueDate : new Date(givenDueDate);}
+
     get priority(){return this.#priority;}
     set priority(givenPriority){
+        givenPriority = +givenPriority;
         if( givenPriority > 0 && 
             givenPriority <= ToDo.MIN_PRIORITY_BOUND && 
             Number.isInteger(givenPriority)){
@@ -82,6 +86,16 @@ export class ToDo{
     get checklist(){return this.#checklist.slice();}
     addSubtask(newTaskDescription){
         this.#checklist.push(new Subtask({description: newTaskDescription}));
+    }
+    editChecklist(givenChecklist){
+        this.#checklist.length = givenChecklist.length;
+        for(let i = 0; i < givenChecklist.length; i++){
+            if(this.#checklist[i])
+                this.#checklist[i].description = givenChecklist[i];
+            else
+                this.#checklist[i] = new Subtask({description: givenChecklist[i]});
+        }
+        console.log(this.#checklist);
     }
     deleteSubtask(index){this.#checklist.splice(index, 1);}
     

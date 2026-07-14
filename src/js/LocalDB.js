@@ -6,8 +6,10 @@ let projects = [];
 
 function initialize(){
     if(!localStorage[LOCAL_STORAGE_KEY]){
+        // default project
         let generalProject = new Project({name: "General", toDoList: []});
         
+        // inserting sample to-do into default project
         let sampleTodo = new ToDo({
             title: "Buy all the groceries",
             description: `On the way from college make sure to get the following:
@@ -28,6 +30,16 @@ function initialize(){
         });
         generalProject.addToDo(sampleTodo);
         projects.push(generalProject);
+
+        // inserting sample projects
+        projects.push(
+            new Project({name: "Groceries", toDoList: []}),
+            new Project({name: "Home Assignments", toDoList: []}),
+            new Project({name: "Workout", toDoList: []}),
+            new Project({name: "Reading", toDoList: []}),
+            new Project({name: "Hangouts", toDoList: []}),
+            new Project({name: "Gaming", toDoList: []})
+        )
     } else deserialize();
 }
 
@@ -44,6 +56,17 @@ function removeProject(index) {
     projects.splice(index, 1);
 }
 
+function getProjectOfToDo(givenToDo){
+    for(let project of projects)
+        for(let toDo of project.toDoList)
+            if(toDo.id === givenToDo.id)
+                return project;
+}
+function setProjectOfToDo(givenToDo, givenProjectName){
+    getProjectOfToDo(givenToDo).removeToDo(givenToDo);
+    getProject(givenProjectName).addToDo(givenToDo);
+}
+
 function serialize(){localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(projects);}
 function deserialize(){
     let rawProjects = JSON.parse(localStorage[LOCAL_STORAGE_KEY]); // "raw" because these objects only store project's attributes but lack methods an actual Project instance would have (since JSON can't store functions)
@@ -51,4 +74,4 @@ function deserialize(){
         projects.push(new Project(rawProject));
 }
 
-export default { projects, initialize, getProject, addProject, removeProject, serialize, deserialize};
+export default { projects, initialize, getProject, addProject, removeProject, getProjectOfToDo, setProjectOfToDo, serialize, deserialize};

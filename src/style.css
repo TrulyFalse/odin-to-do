@@ -580,6 +580,11 @@ main > div {
   }
 }
 
+.todo-card.removal-animation {
+  height: 0;
+  opacity: 0;
+}
+
 .todo-card .header {
   display: flex;
   justify-content: space-between;
