@@ -309,6 +309,7 @@ function initializePage(){
     })
     editDialog.addEventListener('cancel', (e) => {
         e.preventDefault();
+        editDialog.querySelector('button[type="submit"]').removeEventListener('click', submitEditFunc);
         editDialog.classList.remove('open');
         setTimeout(() => {editDialog.close()}, 1000);
     })
@@ -317,7 +318,10 @@ function initializePage(){
 
 function renderToDo(toDo) {
     let indexOfNewToDo = DBView.list.findIndex((item) => item.id === toDo.id);
-    if(indexOfNewToDo === -1) console.log( "Card doesn't appear in current view.");
+    if(indexOfNewToDo === -1) {
+        console.log( "Card doesn't appear in current view.");
+        return;
+    }
 
     let toDoCard = document.createElement('div');
     toDoCard.dataset.id = toDo.id;
@@ -483,6 +487,9 @@ function renderView(){
     }
 }
 
+
+let submitEditFunc; // putting event listener's variable on global scope to be able to remove it elsewhere.
+
 function editTodo(toDo) {
     const editDialog = document.querySelector('#todo-edit-dialog');
     editDialog.querySelector('#edit-title').value = toDo.title;
@@ -518,7 +525,8 @@ function editTodo(toDo) {
     editDialog.classList.add('open');
 
     let updateTodoBtn = editDialog.querySelector('button[type="submit"]');
-    updateTodoBtn.addEventListener("click", async (e) => {
+
+    submitEditFunc = async (e) => {
         e.preventDefault();
         if(!document.forms['edit-todo-form'].reportValidity()) return;
 
@@ -537,6 +545,9 @@ function editTodo(toDo) {
         LocalDB.setProjectOfToDo(toDo, form.get("project"));
         toDo.editChecklist(checklist);
         
+        let cancelEvent = new Event('cancel');
+        editDialog.dispatchEvent(cancelEvent);
+
         await removeToDo(toDo);
         DBView.refreshList();
         renderToDo(toDo);
@@ -551,7 +562,9 @@ function editTodo(toDo) {
         //         requestAnimationFrame(autoScroll);
         // }
         // requestAnimationFrame(autoScroll);
-    });
+    }
+
+    updateTodoBtn.addEventListener("click", submitEditFunc, {once: true,});
 }
 
 export default {
