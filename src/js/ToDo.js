@@ -1,6 +1,7 @@
 export class Subtask{
     description;
     isDone;
+    #id;
 
     constructor( {description, isDone = false} ){
         this.description = description;
@@ -9,7 +10,7 @@ export class Subtask{
 }
 
 export class ToDo{
-    static idCounter = 0;
+    static #idArr = [];
     static MIN_PRIORITY_BOUND = 10;
     #id;
     title;
@@ -21,7 +22,18 @@ export class ToDo{
     #dateCreated;
 
     constructor( {title, description, dueDate, priority, isDone = false, checklist} ){
-        this.#id = ToDo.idCounter++;
+        let currentVacantID = ToDo.#idArr.findIndex((item, index, arr) => {
+            if(!item){
+                arr[index] = true;
+                return true;
+            }
+        });
+        if(currentVacantID === -1){
+            currentVacantID = ToDo.#idArr.length;
+            ToDo.#idArr[ToDo.#idArr.length] = true;
+        }
+
+        this.#id = currentVacantID;
         this.title = title;
         this.description = description;
         this.dueDate = (dueDate instanceof Date) ? dueDate : new Date(dueDate);
@@ -98,6 +110,10 @@ export class ToDo{
         console.log(this.#checklist);
     }
     deleteSubtask(index){this.#checklist.splice(index, 1);}
+
+    remove(){
+        ToDo.#idArr[this.#id] = false;
+    }
     
     get isDone(){
         if(this.progress !== null && !this.progress.isAllComplete) this.#isDone = false;
