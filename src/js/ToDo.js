@@ -1,16 +1,19 @@
+import { allocateID, releaseID } from "./IDAllocator.js";
+
 export class Subtask{
     description;
     isDone;
     #id;
 
-    constructor( {description, isDone = false} ){
+    constructor( {id, description, isDone = false} ){
         this.description = description;
         this.isDone = isDone;
+        this.#id = id ?? allocateID();
     }
+    get id() {return this.#id;}
 }
 
 export class ToDo{
-    static #idArr = [];
     static MIN_PRIORITY_BOUND = 10;
     #id;
     title;
@@ -21,19 +24,8 @@ export class ToDo{
     #isDone;
     #dateCreated;
 
-    constructor( {title, description, dueDate, priority, isDone = false, checklist} ){
-        let currentVacantID = ToDo.#idArr.findIndex((item, index, arr) => {
-            if(!item){
-                arr[index] = true;
-                return true;
-            }
-        });
-        if(currentVacantID === -1){
-            currentVacantID = ToDo.#idArr.length;
-            ToDo.#idArr[ToDo.#idArr.length] = true;
-        }
-
-        this.#id = currentVacantID;
+    constructor( {id, title, description, dueDate, priority, isDone = false, checklist} ){
+        this.#id = id ?? allocateID();
         this.title = title;
         this.description = description;
         this.dueDate = (dueDate instanceof Date) ? dueDate : new Date(dueDate);
@@ -96,23 +88,26 @@ export class ToDo{
     }
 
     get checklist(){return this.#checklist.slice();}
-    addSubtask(newTaskDescription){
-        this.#checklist.push(new Subtask({description: newTaskDescription}));
-    }
     editChecklist(givenChecklist){
-        this.#checklist.length = givenChecklist.length;
-        for(let i = 0; i < givenChecklist.length; i++){
-            if(this.#checklist[i])
-                this.#checklist[i].description = givenChecklist[i];
-            else
-                this.#checklist[i] = new Subtask({description: givenChecklist[i]});
-        }
-        console.log(this.#checklist);
-    }
-    deleteSubtask(index){this.#checklist.splice(index, 1);}
+        let deletedSubtasks = this.#checklist.filter((existingSubtask) => !givenChecklist.find((givenSubtask) => givenSubtask.id === existingSubtask.id));
+        deletedSubtasks.forEach((subtask) => {releaseID(subtask.id);});
 
-    remove(){
-        ToDo.#idArr[this.#id] = false;
+        let newChecklist = [];
+        for(let subtask of givenChecklist){
+            if(subtask.id) {
+                let referredSubtask = this.#checklist.find((item) => item.id === subtask.id);
+                referredSubtask.description = subtask.description;
+                newChecklist.push(referredSubtask);
+            } else {
+                let newSubtask = new Subtask({description: subtask.description});
+                newChecklist.push(newSubtask);
+            }     
+        }
+        this.#checklist = newChecklist;
+    }
+
+    delete(){
+        releaseID(this.#id);
     }
     
     get isDone(){

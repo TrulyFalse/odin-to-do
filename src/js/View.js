@@ -506,6 +506,7 @@ function editTodo(toDo) {
     for(let subtask of toDo.checklist){
         let li = document.createElement('li');
             let input = document.createElement('input');
+            input.dataset.id = subtask.id;
             input.type = 'text';
             input.value = subtask.description;
             li.append(input);
@@ -533,8 +534,8 @@ function editTodo(toDo) {
         // convert li nodelist into array of subtask strings
         let checklist = 
         [...editDialog.querySelectorAll('.checklist input')]
-        .map((item) => item.value)
-        .filter((subtaskDescription) => subtaskDescription);
+        .filter((item) => item.value)
+        .map((item) => {return {id: +item.dataset.id, description: item.value}});
 
         let form = new FormData(editToDoForm);
         
