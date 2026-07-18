@@ -50,9 +50,10 @@ function addProject(project){
     else
         throw new Error("Project names must be unique!");
 }
-function removeProject(index) {
-    if(projects[index].name === "General")
+function removeProject(name) {
+    if(name === "General")
         throw new Error("'General' project is not deletable as it constitutes the primary folder for storing To-Dos.");
+    let index = projects.findIndex((project) => project.name === name);
     projects.splice(index, 1);
 }
 
@@ -67,11 +68,13 @@ function setProjectOfToDo(givenToDo, givenProjectName){
     getProject(givenProjectName).addToDo(givenToDo);
 }
 
-function serialize(){localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(projects);}
+function serialize(toDo){
+    localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(projects);
+}
 function deserialize(){
     let rawProjects = JSON.parse(localStorage[LOCAL_STORAGE_KEY]); // "raw" because these objects only store project's attributes but lack methods an actual Project instance would have (since JSON can't store functions)
-    for(let rawProject of rawProjects)
-        projects.push(new Project(rawProject));
+    for(let project of rawProjects)
+        projects.push(new Project(project));
 }
 
 export default { projects, initialize, getProject, addProject, removeProject, getProjectOfToDo, setProjectOfToDo, serialize, deserialize};

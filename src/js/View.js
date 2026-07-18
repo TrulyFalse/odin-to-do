@@ -197,6 +197,7 @@ function initializePage(){
         }
         let newTodoObject = new ToDo(newTodo);
         LocalDB.getProject(newTodo.project).addToDo(newTodoObject);
+        LocalDB.serialize();
         DBView.refreshList();
 
         renderToDo(newTodoObject);
@@ -422,6 +423,8 @@ function renderToDo(toDo) {
                                             progress.value = toDo.progress.numChecked;
                                             progressFractionTextNode.data = ` ${toDo.progress.numChecked}/${toDo.progress.totalSubtasks}`;
                                             if(!toDo.progress.isAllComplete && isDoneBtn.classList.contains('done')) isDoneBtn.classList.toggle('done');
+
+                                            LocalDB.serialize();
                                         });
                                         div.append(input);
                                     li.append(div);
@@ -545,6 +548,7 @@ function editTodo(toDo) {
         toDo.priority = form.get("priority");
         LocalDB.setProjectOfToDo(toDo, form.get("project"));
         toDo.editChecklist(checklist);
+        LocalDB.serialize();
         
         let cancelEvent = new Event('cancel');
         editDialog.dispatchEvent(cancelEvent);

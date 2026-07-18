@@ -24,7 +24,7 @@ export class ToDo{
     #isDone;
     #dateCreated;
 
-    constructor( {id, title, description, dueDate, priority, isDone = false, checklist} ){
+    constructor( {id, title, description, dueDate, priority, isDone = false, checklist, dateCreated} ){
         this.#id = id ?? allocateID();
         this.title = title;
         this.description = description;
@@ -36,7 +36,7 @@ export class ToDo{
                 this.#checklist.push(new Subtask(item));
 
         this.#isDone = isDone;
-        this.#dateCreated = new Date();
+        this.#dateCreated = dateCreated ?? new Date();
     }
 
     get id(){return this.#id;}
@@ -95,7 +95,7 @@ export class ToDo{
         let newChecklist = [];
         for(let subtask of givenChecklist){
             if(subtask.id) {
-                let referredSubtask = this.#checklist.find((item) => item.id === subtask.id);
+                let referredSubtask = this.#checklist.find((item) => item.id === +subtask.id);
                 referredSubtask.description = subtask.description;
                 newChecklist.push(referredSubtask);
             } else {
@@ -124,12 +124,14 @@ export class ToDo{
     
     toJSON(){
         return {
+            id: this.id,
             title: this.title,
             description: this.description,
             dueDate: this.dueDate.toJSON(),
             priority: this.priority,
             isDone: this.isDone,
             checklist: this.checklist,
+            dateCreated: this.dateCreated.toString(),
         }
     }
 }
