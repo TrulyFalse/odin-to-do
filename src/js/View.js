@@ -4,6 +4,8 @@ import {ToDo} from "./ToDo.js";
 
 import PEN_ICON_PATH from "../img/pen-icon.png";
 import TICK_ICON_PATH from "../img/tick.svg";
+import DELETE_ICON_PATH from "../img/delete.png";
+import HIDDEN_MENU_ICON_PATH from "../img/hidden-menu.png";
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
@@ -338,15 +340,45 @@ function renderToDo(toDo) {
             let btn = document.createElement('button');
             btn.type = 'button';
             btn.addEventListener('click', () => {
-                editTodo(toDo);
+                let dropDownMenuUl = header.querySelector('ul.dropdown-menu');
+                dropDownMenuUl.classList.toggle('visible');
             })
 
                 let img = document.createElement('img');
-                img.src = PEN_ICON_PATH;
+                img.src = HIDDEN_MENU_ICON_PATH;
                 img.alt = "edit pen icon";
                 btn.append(img);
             
             header.append(btn);
+
+            let dropDownMenuUl = document.createElement('ul');
+            dropDownMenuUl.classList.toggle('dropdown-menu');
+                let optionLi = document.createElement('li');
+                    let editImg = document.createElement('img');
+                    editImg.src = PEN_ICON_PATH;
+                    optionLi.append(editImg);
+
+                    let optionText = document.createTextNode('Edit');
+                    optionLi.append(optionText);
+                    optionLi.addEventListener('click', () => {
+                        editTodo(toDo);
+                    });
+
+                dropDownMenuUl.append(optionLi);
+
+                optionLi = document.createElement('li');
+                    let deleteImg = document.createElement('img');
+                    deleteImg.src = DELETE_ICON_PATH;
+                    optionLi.append(deleteImg);
+
+                    optionText = document.createTextNode('Delete');
+                    optionLi.append(optionText);
+                    optionLi.addEventListener('click', () => {
+                        removeTodo(toDo);
+                    });
+
+                dropDownMenuUl.append(optionLi);
+            header.append(dropDownMenuUl);
         toDoCard.append(header);
 
         let textarea = document.createElement('textarea');
