@@ -700,6 +700,7 @@ main > div {
   box-sizing: border-box;
   height: 0;
   padding: 0 var(--separation-s);
+  z-index: 1;
 }
 
 .todo-status .progress:hover .subtasks{
