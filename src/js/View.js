@@ -345,7 +345,7 @@ function renderToDo(toDo) {
 
                 let hideOptionsDropdown = (e) => {
                     let isExternalClick = e.target != btn && ![...btn.children].some((child) => e.target === child) &&
-                                        e.target != dropDownMenuUl && ![...dropDownMenuUl.children].some((child) => e.target === child)
+                                        e.target != dropDownMenuUl && ![...dropDownMenuUl.children].some((child) => e.target === child);
                     if(isExternalClick){
                         dropDownMenuUl.classList.toggle('visible');
                         document.removeEventListener('click', hideOptionsDropdown);
@@ -386,7 +386,7 @@ function renderToDo(toDo) {
                     optionText = document.createTextNode('Delete');
                     optionLi.append(optionText);
                     optionLi.addEventListener('click', () => {
-                        removeTodo(toDo);
+                        removeToDo(toDo);
                     });
 
                 dropDownMenuUl.append(optionLi);
