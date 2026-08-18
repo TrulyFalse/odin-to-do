@@ -610,12 +610,13 @@ main > div {
   background-color: rgba(159, 159, 159, 0.515);
 }
 .header ul.dropdown-menu{
-  padding: var(--separation-s);
+  --width: 150px;
+  padding: 0;
   position: absolute;
   right: 0;
   top: 100%;
   height: 0;
-  width: var(--sidebar-min-width);
+  width: var(--width);
   opacity: 0;
   list-style-type: none;
   list-style-position: inside;
@@ -623,6 +624,7 @@ main > div {
   box-shadow: var(--box-shadow-light);
   border-radius: var(--border-radius-s);
   visibility: hidden;
+  overflow: hidden;
   
   transition: height var(--transition-s), opacity var(--transition-s);
 }
@@ -630,6 +632,19 @@ main > div {
   height: calc(var(--separation-m) * 2.5);
   opacity: 1;
   visibility: visible;
+}
+ul.dropdown-menu hr{
+  border: none;
+  border-bottom: 1px solid rgb(189, 189, 189);
+}
+ul.dropdown-menu li{
+  padding: var(--separation-xs);
+  display: flex;
+  align-items: center;
+}
+ul.dropdown-menu li:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 .header ul.dropdown-menu img{
   width: var(--icon-width-s);

@@ -342,11 +342,22 @@ function renderToDo(toDo) {
             btn.addEventListener('click', () => {
                 let dropDownMenuUl = header.querySelector('ul.dropdown-menu');
                 dropDownMenuUl.classList.toggle('visible');
+
+                let hideOptionsDropdown = (e) => {
+                    if( e.target != btn && 
+                        ![...btn.children].some((child) => e.target === child) &&
+                        e.target != dropDownMenuUl && 
+                        ![...dropDownMenuUl.children].some((child) => e.target === child)){
+                        dropDownMenuUl.classList.toggle('visible');
+                        document.removeEventListener('click', hideOptionsDropdown);
+                    }
+                }
+                document.addEventListener('click', hideOptionsDropdown);
             })
 
                 let img = document.createElement('img');
                 img.src = HIDDEN_MENU_ICON_PATH;
-                img.alt = "edit pen icon";
+                img.alt = "menu icon";
                 btn.append(img);
             
             header.append(btn);
@@ -365,6 +376,8 @@ function renderToDo(toDo) {
                     });
 
                 dropDownMenuUl.append(optionLi);
+
+                dropDownMenuUl.append(document.createElement('hr'));
 
                 optionLi = document.createElement('li');
                     let deleteImg = document.createElement('img');
