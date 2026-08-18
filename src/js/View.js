@@ -344,10 +344,9 @@ function renderToDo(toDo) {
                 dropDownMenuUl.classList.toggle('visible');
 
                 let hideOptionsDropdown = (e) => {
-                    if( e.target != btn && 
-                        ![...btn.children].some((child) => e.target === child) &&
-                        e.target != dropDownMenuUl && 
-                        ![...dropDownMenuUl.children].some((child) => e.target === child)){
+                    let isExternalClick = e.target != btn && ![...btn.children].some((child) => e.target === child) &&
+                                        e.target != dropDownMenuUl && ![...dropDownMenuUl.children].some((child) => e.target === child)
+                    if(isExternalClick){
                         dropDownMenuUl.classList.toggle('visible');
                         document.removeEventListener('click', hideOptionsDropdown);
                     }
