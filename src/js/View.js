@@ -6,6 +6,7 @@ import PEN_ICON_PATH from "../img/pen-icon.png";
 import TICK_ICON_PATH from "../img/tick.svg";
 import DELETE_ICON_PATH from "../img/delete.png";
 import HIDDEN_MENU_ICON_PATH from "../img/hidden-menu.png";
+import FOLDER_ICON_PATH from "../img/project-instance-icon.png";
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
@@ -216,15 +217,23 @@ function initializePage(){
         // requestAnimationFrame(autoScroll);
     });
 
-    function toDoFormInit(toDoFormElement){
-        const projectSelect = toDoFormElement.querySelector('select[name="project"]');
-        for(let project of LocalDB.projects){
-            let option = document.createElement('option');
-            option.value = project.name;
-            option.textContent = (project.name !== 'General') ? project.name : 'General (Default)';
-            projectSelect.append(option);
+    function refreshProjectList(){
+        let toDoForms = [...document.querySelectorAll('.todo-form')];
+        for(let form of toDoForms){
+            const projectSelect = form.querySelector('select[name="project"]');
+            projectSelect.innerHTML = "";
+            for(let project of LocalDB.projects){
+                let option = document.createElement('option');
+                option.value = project.name;
+                option.textContent = (project.name !== 'General') ? project.name : 'General (Default)';
+                projectSelect.append(option);
+            }
         }
-
+    }
+    refreshProjectList();
+    
+    let toDoForms = [...document.querySelectorAll('.todo-form')];
+    for(let toDoFormElement of toDoForms){
         const resetBtn = toDoFormElement.querySelector('button[type="reset"]');
         const checklistOl = toDoFormElement.querySelector('.checklist ol');
         const addSubtaskBtn = checklistOl.querySelector('.add-subtask-btn');
@@ -299,10 +308,7 @@ function initializePage(){
             if(e.target.value === "") e.target.value = 1;
         })
     }
-
-    toDoFormInit(document.querySelector('#create-todo-form'));
-    toDoFormInit(document.querySelector('#edit-todo-form'));
-
+    
 
     const editDialogCloseBtn = document.querySelector('#todo-edit-dialog button.close-dialog');
     const editDialog = document.querySelector('#todo-edit-dialog');
@@ -315,6 +321,56 @@ function initializePage(){
         editDialog.querySelector('button[type="submit"]').removeEventListener('click', submitEditFunc);
         editDialog.classList.remove('open');
         setTimeout(() => {editDialog.close()}, 1000);
+    })
+
+
+
+    let projectUlAddBtn = document.querySelector('#project-list li:last-of-type');
+    projectUlAddBtn.addEventListener('click', () => {
+        // <li><img src="./img/project-instance-icon.png" alt="project-instance-icon">Groceries</li>
+        let newProjectLi = document.createElement('li');
+
+        let img = document.createElement('img');
+        img.src = FOLDER_ICON_PATH;
+        img.alt = "project icon";
+        newProjectLi.append(img);
+
+        let nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Enter project name...';
+        nameInput.minLength = '1';
+        nameInput.maxLength = '25';
+        nameInput.required = true;
+        nameInput.addEventListener('keydown', (e) => {
+            nameInput.setCustomValidity('');
+            if(e.key === 'Enter'){
+                if(nameInput.checkValidity()) nameInput.blur(); // we blur it so the blur eventListener can be relayed the task of submiting the input
+                else nameInput.reportValidity();
+            } else if(e.key === 'Escape'){
+                e.preventDefault();
+                nameInput.parentElement.remove();
+            }
+        })
+        nameInput.addEventListener('blur', () => {
+            if(!nameInput.parentElement.isConnected) return;
+            if(nameInput.value === "")
+                nameInput.parentElement.remove();
+            else if (nameInput.value !== "" && nameInput.checkValidity()){
+                try{
+                    let newProject = new Project({name: nameInput.value});
+                    LocalDB.addProject(newProject);
+                    nameInput.parentElement.append(document.createTextNode(nameInput.value));
+                    nameInput.remove();
+                    refreshProjectList();
+                }catch(e){
+                    nameInput.setCustomValidity(e.message);
+                    nameInput.reportValidity();
+                }
+            }
+        })        
+        newProjectLi.append(nameInput);
+        projectUlAddBtn.parentElement.insertBefore(newProjectLi, projectUlAddBtn);
+        nameInput.focus();
     })
 }
 

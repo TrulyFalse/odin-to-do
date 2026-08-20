@@ -184,7 +184,7 @@ aside{
   width: 100%;
 }
 
-#project-list{
+#lists{
   margin-top: calc(var(--separation-m) * -1);
   display: flex;
   flex-direction: column;
@@ -254,9 +254,18 @@ aside ul li img.center{
   margin: 0 auto;
 }
 
-aside ul li:hover{
+aside ul li:hover, aside ul li:focus-within{
   background-color: rgba(0, 0, 0, 0.165);
   cursor: pointer;
+}
+
+aside ul li input{
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+aside ul li input::placeholder{
+  color: rgb(71, 71, 71);
 }
 
 header{
@@ -641,10 +650,11 @@ ul.dropdown-menu li{
   padding: var(--separation-xs);
   display: flex;
   align-items: center;
+  transition: background-color var(--transition-xs);
 }
 ul.dropdown-menu li:hover{
   cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .header ul.dropdown-menu img{
   width: var(--icon-width-s);
