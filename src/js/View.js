@@ -92,7 +92,7 @@ function filteredToDos(filterConstraints){
 }
 
 // setting up a webpage DB-view state, for ease of refreshing 
-// (because we are only getting copies of the DB in the frontend and we don't have a live feed of it, we must remember what view of the DB we had to be able to refresh it and sync the changes made)
+// (because we are only getting copies of the DB in the frontend and we don't have a live feed of it, a variable must remember what view of the DB we had to be able to refresh it and sync the changes made)
 const DBView = {
     filterConstraints: {
         unifiedSearchString: undefined,
@@ -139,13 +139,13 @@ const DBView = {
                 this.list = sorter.sort(upcomingToDos());
                 break;
             case this.ENUM.FILTERED:
-                this.list = sorter.sort(filteredToDos(filterConstraints));
+                this.list = sorter.sort(filteredToDos(this.filterConstraints));
                 break;
             case this.ENUM.PROJECT:
-                this.list = sorter.sort(LocalDB.getProject(currentProjectViewed));
+                this.list = sorter.sort(LocalDB.getProject(this.currentProjectViewed).toDoList);
                 break;
             default:
-                throw new Error("Unknown state in view config");
+                throw new Error("Unknown state in DBView config");
         }
     }
 }
@@ -372,6 +372,29 @@ function initializePage(){
         projectUlAddBtn.parentElement.insertBefore(newProjectLi, projectUlAddBtn);
         nameInput.focus();
     })
+
+    // dynmically list out the projects
+    let projectListUl = document.querySelector('#project-list');
+    for(let project of LocalDB.projects){
+        // <li><img src="./img/project-instance-icon.png" alt="project-instance-icon">Groceries</li>
+        let li = document.createElement('li');
+
+        let img = document.createElement('img');
+        img.src = FOLDER_ICON_PATH;
+        img.alt = "project icon";
+        li.append(img, document.createTextNode(project.name));
+        projectListUl.prepend(li);
+    }
+
+    
+    projectListUl.addEventListener('click', (e) => {
+        if(![...projectListUl.querySelectorAll('li:last-of-type, li:last-of-type *')].includes(e.target) && (e.target.tagName === "LI" || e.target.tagName === "IMG")){
+            DBView.currentListSetting = DBView.ENUM.PROJECT;
+            DBView.currentProjectViewed = (e.target.tagName === "LI") ? e.target.textContent : e.target.parentElement.textContent;
+            DBView.refreshList();
+            renderView();
+        }
+    });
 }
 
 
@@ -585,6 +608,7 @@ async function removeToDo(toDo){
 }
 
 function renderView(){
+    cardContainer.innerHTML = "";
     for(let toDo of DBView.list){
         renderToDo(toDo);
     }
