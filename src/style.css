@@ -619,7 +619,7 @@ main > div {
   align-items: flex-end;
   position: relative;
 }
-.header button {
+button.gradient-btn {
   padding: var(--separation-xs);
   width: var(--btn-width-m);
   height: var(--btn-width-m);
@@ -631,10 +631,10 @@ main > div {
   background-position: top;
   transition: background-position var(--transition-s);
 }
-.header button:hover {
+button.gradient-btn:hover {
   background-position: bottom;
 }
-.header button:active {
+button.gradient-btn:active {
   background-color: rgba(159, 159, 159, 0.515);
 }
 .header ul.dropdown-menu{

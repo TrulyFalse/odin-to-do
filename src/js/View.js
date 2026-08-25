@@ -7,6 +7,8 @@ import TICK_ICON_PATH from "../img/tick.svg";
 import DELETE_ICON_PATH from "../img/delete.png";
 import HIDDEN_MENU_ICON_PATH from "../img/hidden-menu.png";
 import FOLDER_ICON_PATH from "../img/project-instance-icon.png";
+import ALL_ICON_PATH from "../img/all-icon.png";
+import CLOCK_ICON_PATH from "../img/clock-icon.png";
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
@@ -126,14 +128,22 @@ const DBView = {
     
     list: undefined,
     refreshList(){
+        let headerH1 = document.querySelector('header h1');
+        let headerImg = headerH1.querySelector('img');
+        let insertionRefNode = [...headerH1.childNodes].at(4);
+
         switch(this.currentListSetting){
             case this.ENUM.ALL:
                 this.list = sorter.sort(allToDos());
-                // console.log(allToDos());
-                // console.log(this.list);
+                
+                headerH1.insertBefore(document.createTextNode("All"), insertionRefNode);
+                headerImg.src = ALL_ICON_PATH;
                 break;
             case this.ENUM.TODAY:
                 this.list = sorter.sort(pendingToday());
+
+                headerH1.insertBefore(document.createTextNode("Today"), insertionRefNode);
+                headerImg.src = CLOCK_ICON_PATH;
                 break;
             case this.ENUM.UPCOMING:
                 this.list = sorter.sort(upcomingToDos());
@@ -143,17 +153,21 @@ const DBView = {
                 break;
             case this.ENUM.PROJECT:
                 this.list = sorter.sort(LocalDB.getProject(this.currentProjectViewed).toDoList);
+                
+                headerH1.insertBefore(document.createTextNode(DBView.currentProjectViewed), insertionRefNode);
+                headerImg.src = FOLDER_ICON_PATH;
                 break;
             default:
                 throw new Error("Unknown state in DBView config");
         }
+        insertionRefNode.remove();
+        renderView();
     }
 }
 DBView.currentListSetting = DBView.ENUM.ALL;
 
 function initializePage(){
     DBView.refreshList();
-    renderView();
     
     addBtn.addEventListener('click', () => {
         addBtn.classList.toggle('open');
@@ -325,7 +339,7 @@ function initializePage(){
 
 
 
-    let projectUlAddBtn = document.querySelector('#project-list li:last-of-type');
+    let projectUlAddBtn = document.querySelector('#sidebar-project-list li:last-of-type');
     projectUlAddBtn.addEventListener('click', () => {
         // <li><img src="./img/project-instance-icon.png" alt="project-instance-icon">Groceries</li>
         let newProjectLi = document.createElement('li');
@@ -374,17 +388,22 @@ function initializePage(){
     })
 
     // dynmically list out the projects
-    let projectListUl = document.querySelector('#project-list');
-    for(let project of LocalDB.projects){
-        // <li><img src="./img/project-instance-icon.png" alt="project-instance-icon">Groceries</li>
-        let li = document.createElement('li');
+    let projectListUl = document.querySelector('#sidebar-project-list');
+    function refreshSidebarProjectList(){
+        let existingProjectsLiList = projectListUl.querySelectorAll('li:not(:last-of-type)');
+        existingProjectsLiList.forEach((projectLi) => projectLi.remove());
+        for(let project of LocalDB.projects){
+            // <li><img src="./img/project-instance-icon.png" alt="project-instance-icon">Groceries</li>
+            let li = document.createElement('li');
 
-        let img = document.createElement('img');
-        img.src = FOLDER_ICON_PATH;
-        img.alt = "project icon";
-        li.append(img, document.createTextNode(project.name));
-        projectListUl.prepend(li);
+            let img = document.createElement('img');
+            img.src = FOLDER_ICON_PATH;
+            img.alt = "project icon";
+            li.append(img, document.createTextNode(project.name));
+            projectListUl.prepend(li);
+        }
     }
+    refreshSidebarProjectList();
 
     
     projectListUl.addEventListener('click', (e) => {
@@ -392,16 +411,40 @@ function initializePage(){
             DBView.currentListSetting = DBView.ENUM.PROJECT;
             DBView.currentProjectViewed = (e.target.tagName === "LI") ? e.target.textContent : e.target.parentElement.textContent;
             DBView.refreshList();
-            renderView();
+            
+            /* //TRANSFER TO DBView.refreshList() FOR SINGLE RESPONSIBILITY
             let headerH1 = document.querySelector('header h1');
-            [...headerH1.childNodes].at(-1).remove();
-            headerH1.append(document.createTextNode(DBView.currentProjectViewed));
+            console.log([...headerH1.childNodes]);
+            let insertionRefNode = [...headerH1.childNodes].at(4);
+            headerH1.insertBefore(document.createTextNode(DBView.currentProjectViewed), insertionRefNode);
+            insertionRefNode.remove();
 
             let headerImg = headerH1.querySelector('img');
             headerImg.src = FOLDER_ICON_PATH;
-            
+            */
         }
     });
+
+    let projectDeleteDialog = document.querySelector('#project-delete-confirmation');
+    let projectDeleteBtn = document.querySelector('#project-delete');
+    projectDeleteBtn.addEventListener('click', (e)=>{
+        if(DBView.currentListSetting === DBView.ENUM.PROJECT){
+            projectDeleteDialog.showModal();
+            let yesBtn = projectDeleteDialog.querySelector('.yes');
+            yesBtn.addEventListener('click', (e)=>{
+                LocalDB.removeProject(DBView.currentProjectViewed);
+                LocalDB.serialize();
+                projectDeleteDialog.close();
+                refreshSidebarProjectList();
+                DBView.currentListSetting = DBView.ENUM.ALL;
+                DBView.refreshList();
+            }, {once: true,});
+            let noBtn = projectDeleteDialog.querySelector('.no');
+            noBtn.addEventListener('click', (e)=>{
+                projectDeleteDialog.close();
+            })
+        }
+    })
 }
 
 
@@ -425,6 +468,7 @@ function renderToDo(toDo) {
 
             let btn = document.createElement('button');
             btn.type = 'button';
+            btn.classList.toggle('gradient-btn');
             btn.addEventListener('click', () => {
                 let dropDownMenuUl = header.querySelector('ul.dropdown-menu');
                 dropDownMenuUl.classList.toggle('visible');
