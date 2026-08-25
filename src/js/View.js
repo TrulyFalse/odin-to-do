@@ -393,6 +393,13 @@ function initializePage(){
             DBView.currentProjectViewed = (e.target.tagName === "LI") ? e.target.textContent : e.target.parentElement.textContent;
             DBView.refreshList();
             renderView();
+            let headerH1 = document.querySelector('header h1');
+            [...headerH1.childNodes].at(-1).remove();
+            headerH1.append(document.createTextNode(DBView.currentProjectViewed));
+
+            let headerImg = headerH1.querySelector('img');
+            headerImg.src = FOLDER_ICON_PATH;
+            
         }
     });
 }

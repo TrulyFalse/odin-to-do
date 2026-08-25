@@ -107,6 +107,12 @@ button:hover {
     --todo-form-height: 525px;
 }
 
+.centered-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 body {
     min-width: 100vw;
     min-height: 100vh;
@@ -302,6 +308,19 @@ header h1{
   align-items: center;
   justify-content: center;
   gap: var(--separation-s);
+}
+header h1 div{
+  flex: auto;
+  align-self: stretch;
+}
+#view-options{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+#view-options button{
+  width: var(--btn-width-m);
+  height: var(--btn-width-m);
 }
 
 main {
