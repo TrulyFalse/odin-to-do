@@ -5,7 +5,7 @@ const LOCAL_STORAGE_KEY = 'projects';
 let projects = [];
 
 function initialize(){
-    if(!localStorage[LOCAL_STORAGE_KEY]){
+    if(!localStorage[LOCAL_STORAGE_KEY] || localStorage[LOCAL_STORAGE_KEY] === "[]"){
         // default project
         let generalProject = new Project({name: "General", toDoList: []});
         

@@ -432,22 +432,22 @@ function initializePage(){
         if(DBView.currentListSetting === DBView.ENUM.PROJECT){
             projectDeleteDialog.showModal();
             projectDeleteDialog.classList.toggle('open');
-            let yesBtn = projectDeleteDialog.querySelector('.yes');
-            yesBtn.addEventListener('click', (e)=>{
-                LocalDB.removeProject(DBView.currentProjectViewed);
-                LocalDB.serialize();
-                projectDeleteDialog.close();
-                refreshSidebarProjectList();
-                DBView.currentListSetting = DBView.ENUM.ALL;
-                DBView.refreshList();
-            }, {once: true,});
         }
     })
+    let yesBtn = projectDeleteDialog.querySelector('.yes');
+    yesBtn.addEventListener('click', (e)=>{
+        LocalDB.removeProject(DBView.currentProjectViewed);
+        LocalDB.serialize();
+        projectDeleteDialog.classList.toggle('open');
+        setTimeout(()=>{projectDeleteDialog.close()}, 1000);
+        refreshSidebarProjectList();
+        DBView.currentListSetting = DBView.ENUM.ALL;
+        DBView.refreshList();
+    });
     let noBtn = projectDeleteDialog.querySelector('.no');
     noBtn.addEventListener('click', (e)=>{
         projectDeleteDialog.classList.toggle('open');
         setTimeout(()=>{projectDeleteDialog.close()}, 1000);
-        
     })
 }
 
