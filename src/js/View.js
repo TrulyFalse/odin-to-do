@@ -373,6 +373,7 @@ function initializePage(){
                 try{
                     let newProject = new Project({name: nameInput.value});
                     LocalDB.addProject(newProject);
+                    LocalDB.serialize();
                     nameInput.parentElement.append(document.createTextNode(nameInput.value));
                     nameInput.remove();
                     refreshProjectList();
@@ -430,6 +431,7 @@ function initializePage(){
     projectDeleteBtn.addEventListener('click', (e)=>{
         if(DBView.currentListSetting === DBView.ENUM.PROJECT){
             projectDeleteDialog.showModal();
+            projectDeleteDialog.classList.toggle('open');
             let yesBtn = projectDeleteDialog.querySelector('.yes');
             yesBtn.addEventListener('click', (e)=>{
                 LocalDB.removeProject(DBView.currentProjectViewed);
@@ -439,11 +441,13 @@ function initializePage(){
                 DBView.currentListSetting = DBView.ENUM.ALL;
                 DBView.refreshList();
             }, {once: true,});
-            let noBtn = projectDeleteDialog.querySelector('.no');
-            noBtn.addEventListener('click', (e)=>{
-                projectDeleteDialog.close();
-            })
         }
+    })
+    let noBtn = projectDeleteDialog.querySelector('.no');
+    noBtn.addEventListener('click', (e)=>{
+        projectDeleteDialog.classList.toggle('open');
+        setTimeout(()=>{projectDeleteDialog.close()}, 1000);
+        
     })
 }
 

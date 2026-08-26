@@ -121,6 +121,48 @@ body {
     
 }
 
+#project-delete-confirmation{
+  border: none;
+  background-color: transparent;
+  height: 0;
+  opacity: 0%;
+  overflow: hidden;
+  transition: height var(--transition-m), opacity var(--transition-m);
+}
+#project-delete-confirmation.open{
+  height: 180px;
+  opacity: 100%;
+}
+
+#project-delete-confirmation div{
+  background-color: white;
+  border-radius: var(--border-radius-m);
+  border:none;
+  padding: var(--separation-m);
+  width: 55ch;
+}
+#project-delete-confirmation div h3{
+  margin-bottom: var(--separation-s);
+}
+#project-delete-confirmation div button{
+  border: none;
+  border-radius: var(--border-radius-s);
+  padding: var(--separation-xs) var(--separation-s);
+  transition: background-color var(--transition-s);
+}
+#project-delete-confirmation div button.yes{
+  background-color: rgb(203, 27, 27);
+  color: white;
+  font-weight: bold;
+  margin-right: var(--separation-xs);
+}
+#project-delete-confirmation div button.yes:hover{
+  background-color: rgb(135, 21, 21);
+}
+
+#project-delete-confirmation div button.no:hover{
+  background-color: rgb(188, 188, 188);
+}
 
 #todo-edit-dialog {
   background-color: transparent;
@@ -407,7 +449,6 @@ main {
 
 #todo-edit-dialog #edit-todo-form {
   width: var(--todo-form-width);
-  height: auto;
   background-color: white;
   padding: var(--separation-m);
   padding-bottom: var(--separation-s);
