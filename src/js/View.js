@@ -9,6 +9,8 @@ import HIDDEN_MENU_ICON_PATH from "../img/hidden-menu.png";
 import FOLDER_ICON_PATH from "../img/project-instance-icon.png";
 import ALL_ICON_PATH from "../img/all-icon.png";
 import CLOCK_ICON_PATH from "../img/clock-icon.png";
+import CALENDAR_ICON_PATH from "../img/calendar-icon.png";
+import FUNNEL_ICON_PATH from "../img/funnel-icon.webp"
 
 // index.html based constants (so yes, this module has strong coupling with index.html)
 const addBtn = document.querySelector('#main-create-todo-btn');
@@ -128,39 +130,42 @@ const DBView = {
     
     list: undefined,
     refreshList(){
-        let headerH1 = document.querySelector('header h1');
-        let headerImg = headerH1.querySelector('img');
-        let insertionRefNode = [...headerH1.childNodes].at(4);
-
+        let headerH1Span = document.querySelector('header h1 span');
+        let headerH1Img = document.querySelector('header h1 img');
         switch(this.currentListSetting){
             case this.ENUM.ALL:
                 this.list = sorter.sort(allToDos());
                 
-                headerH1.insertBefore(document.createTextNode("All"), insertionRefNode);
-                headerImg.src = ALL_ICON_PATH;
+                headerH1Span.textContent = 'All';
+                headerH1Img.src = ALL_ICON_PATH;
                 break;
             case this.ENUM.TODAY:
                 this.list = sorter.sort(pendingToday());
 
-                headerH1.insertBefore(document.createTextNode("Today"), insertionRefNode);
-                headerImg.src = CLOCK_ICON_PATH;
+                headerH1Span.textContent = 'Today';
+                headerH1Img.src = CLOCK_ICON_PATH;
                 break;
             case this.ENUM.UPCOMING:
                 this.list = sorter.sort(upcomingToDos());
+
+                headerH1Span.textContent = 'Upcoming';
+                headerH1Img.src = CALENDAR_ICON_PATH;
                 break;
             case this.ENUM.FILTERED:
                 this.list = sorter.sort(filteredToDos(this.filterConstraints));
+
+                headerH1Span.textContent = 'Filter';
+                headerH1Img.src = FUNNEL_ICON_PATH;
                 break;
             case this.ENUM.PROJECT:
                 this.list = sorter.sort(LocalDB.getProject(this.currentProjectViewed).toDoList);
                 
-                headerH1.insertBefore(document.createTextNode(DBView.currentProjectViewed), insertionRefNode);
-                headerImg.src = FOLDER_ICON_PATH;
+                headerH1Span.textContent = DBView.currentProjectViewed;
+                headerH1Img.src = FOLDER_ICON_PATH;
                 break;
             default:
                 throw new Error("Unknown state in DBView config");
         }
-        insertionRefNode.remove();
         renderView();
     }
 }
@@ -412,17 +417,6 @@ function initializePage(){
             DBView.currentListSetting = DBView.ENUM.PROJECT;
             DBView.currentProjectViewed = (e.target.tagName === "LI") ? e.target.textContent : e.target.parentElement.textContent;
             DBView.refreshList();
-            
-            /* //TRANSFER TO DBView.refreshList() FOR SINGLE RESPONSIBILITY
-            let headerH1 = document.querySelector('header h1');
-            console.log([...headerH1.childNodes]);
-            let insertionRefNode = [...headerH1.childNodes].at(4);
-            headerH1.insertBefore(document.createTextNode(DBView.currentProjectViewed), insertionRefNode);
-            insertionRefNode.remove();
-
-            let headerImg = headerH1.querySelector('img');
-            headerImg.src = FOLDER_ICON_PATH;
-            */
         }
     });
 
